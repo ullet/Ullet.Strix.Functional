@@ -18,7 +18,7 @@ namespace Ullet.PD
     /// <summary>
     /// Partially apply function with all parameters fixed.
     /// </summary>
-    public static Func<TOut> Partial<TIn, TOut>(this Func<TIn, TOut> fn, TIn t)
+    public static Func<TOut> Partial<T, TOut>(this Func<T, TOut> fn, T t)
     {
       return () => fn(t);
     }
@@ -31,8 +31,8 @@ namespace Ullet.PD
      *      Func<int> plus3 = plus.Partial(3)
      *      // plus3(4) = 4 + 3 = 7
      */
-    public static Func<TIn2, TOut> Partial<TIn1, TIn2, TOut>(
-      this Func<TIn1, TIn2, TOut> fn, TIn1 t1)
+    public static Func<T2, TOut> Partial<T1, T2, TOut>(
+      this Func<T1, T2, TOut> fn, T1 t1)
     {
       return t2 => fn(t1, t2);
     }
@@ -40,8 +40,8 @@ namespace Ullet.PD
     /// <summary>
     /// Partially apply function with all parameter fixed.
     /// </summary>
-    public static Func<TOut> Partial<TIn1, TIn2, TOut>(
-      this Func<TIn1, TIn2, TOut> fn, TIn1 t1, TIn2 t2)
+    public static Func<TOut> Partial<T1, T2, TOut>(
+      this Func<T1, T2, TOut> fn, T1 t1, T2 t2)
     {
       return () => fn(t1, t2);
     }
@@ -49,8 +49,8 @@ namespace Ullet.PD
     /// <summary>
     /// Partially apply function with first parameter fixed.
     /// </summary>
-    public static Func<TIn2, TIn3, TOut> Partial<TIn1, TIn2, TIn3, TOut>(
-      this Func<TIn1, TIn2, TIn3, TOut> fn, TIn1 t1)
+    public static Func<T2, T3, TOut> Partial<T1, T2, T3, TOut>(
+      this Func<T1, T2, T3, TOut> fn, T1 t1)
     {
       return (t2, t3) => fn(t1, t2, t3);
     }
@@ -64,8 +64,8 @@ namespace Ullet.PD
      *      Func<string, string> alterReality = replace.Partial("dogs", "cats")
      *      // alterReality("I like cats") -> "I like dogs"
      */
-    public static Func<TIn3, TOut> Partial<TIn1, TIn2, TIn3, TOut>(
-      this Func<TIn1, TIn2, TIn3, TOut> fn, TIn1 t1, TIn2 t2)
+    public static Func<T3, TOut> Partial<T1, T2, T3, TOut>(
+      this Func<T1, T2, T3, TOut> fn, T1 t1, T2 t2)
     {
       return t3 => fn(t1, t2, t3);
     }
@@ -73,8 +73,8 @@ namespace Ullet.PD
     /// <summary>
     /// Partially apply function with all parameters fixed.
     /// </summary>
-    public static Func<TOut> Partial<TIn1, TIn2, TIn3, TOut>(
-      this Func<TIn1, TIn2, TIn3, TOut> fn, TIn1 t1, TIn2 t2, TIn3 t3)
+    public static Func<TOut> Partial<T1, T2, T3, TOut>(
+      this Func<T1, T2, T3, TOut> fn, T1 t1, T2 t2, T3 t3)
     {
       return () => fn(t1, t2, t3);
     }
@@ -83,8 +83,8 @@ namespace Ullet.PD
     /// Compose <paramref name="outer"/> function with
     /// <paramref name="inner"/> function.
     /// </summary>
-    public static Func<TIn, TOut2> After<TIn, TOut1, TOut2>(
-      this Func<TOut1, TOut2> outer, Func<TIn, TOut1> inner)
+    public static Func<T, TOut2> After<T, TOut1, TOut2>(
+      this Func<TOut1, TOut2> outer, Func<T, TOut1> inner)
     {
       return t => outer(inner(t));
     }
@@ -127,8 +127,8 @@ namespace Ullet.PD
      * var selectSquares = select.Flip().Partial(x => x*x);
      * var squares = selectSquares(new[] {1, 2, 3}); //=> enumerable [1, 4, 9]
      */
-    public static Func<TIn2, TIn1, TOut> Flip<TIn1, TIn2, TOut>(
-      this Func<TIn1, TIn2, TOut> fn)
+    public static Func<T2, T1, TOut> Flip<T1, T2, TOut>(
+      this Func<T1, T2, TOut> fn)
     {
       return (t2, t1) => fn(t1, t2);
     }
@@ -137,10 +137,46 @@ namespace Ullet.PD
     /// Construct a new function taking same parameters as original but in
     /// reverse order.
     /// </summary>
-    public static Func<TIn3, TIn2, TIn1, TOut> Flip<TIn1, TIn2, TIn3, TOut>(
-      this Func<TIn1, TIn2, TIn3, TOut> fn)
+    public static Func<T3, T2, T1, TOut> Flip<T1, T2, T3, TOut>(
+      this Func<T1, T2, T3, TOut> fn)
     {
       return (t3, t2, t1) => fn(t1, t2, t3);
+    }
+
+    /// <summary>
+    /// Convert function to curried form.
+    /// </summary>
+    public static Func<T1, Func<T2, TOut>> Curry<T1, T2, TOut>(
+      this Func<T1, T2, TOut> fn)
+    {
+      return t1 => t2 => fn(t1, t2);
+    }
+
+    /// <summary>
+    /// Convert function to curried form.
+    /// </summary>
+    public static Func<T1, Func<T2, Func<T3, TOut>>>
+      Curry<T1, T2, T3, TOut>(this Func<T1, T2, T3, TOut> fn)
+    {
+      return t1 => t2 => t3 => fn(t1, t2, t3);
+    }
+
+    /// <summary>
+    /// Convert function to curried form.
+    /// </summary>
+    public static Func<T1, Func<T2, Func<T3, Func<T4, TOut>>>>
+      Curry<T1, T2, T3, T4, TOut>(this Func<T1, T2, T3, T4, TOut> fn)
+    {
+      return t1 => t2 => t3 => t4 => fn(t1, t2, t3, t4);
+    }
+
+    /// <summary>
+    /// Convert function to curried form.
+    /// </summary>
+    public static Func<T1, Func<T2, Func<T3, Func<T4, Func<T5, TOut>>>>>
+      Curry<T1, T2, T3, T4, T5, TOut>(this Func<T1, T2, T3, T4, T5, TOut> fn)
+    {
+      return t1 => t2 => t3 => t4 => t5 => fn(t1, t2, t3, t4, t5);
     }
   }
 }
