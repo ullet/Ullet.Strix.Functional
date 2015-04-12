@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Ullet.PD
+namespace Ullet.PD.Functional
 {
   /// <summary>
   /// Extension methods to support a more functional style.

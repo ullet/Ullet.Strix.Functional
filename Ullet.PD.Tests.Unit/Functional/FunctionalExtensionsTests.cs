@@ -8,8 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Ullet.PD.Functional;
 
-namespace Ullet.PD.Tests.Unit
+namespace Ullet.PD.Tests.Unit.Functional
 {
   [TestFixture]
   public class FunctionalExtensionsTests
@@ -146,7 +147,7 @@ namespace Ullet.PD.Tests.Unit
     {
       // (list, seed, aggregator) => result
       Func<IEnumerable<int>, int, Func<int, int, int>, int>
-        aggregate = Enumerable.Aggregate;
+        aggregate = System.Linq.Enumerable.Aggregate;
 
       // (aggregator, seed, list) => result
       Func<Func<int, int, int>, int, IEnumerable<int>, int>

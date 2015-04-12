@@ -3,3 +3,5 @@ obj/
 packages/
 *.user
 *.suo
+scriptcs_packages/
+scriptcs_bin/
