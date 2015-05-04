@@ -45,7 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functional\FnTests\ExceptionHandlerTests.cs" />
+    <Compile Include="Functional\FnTests\ActionExceptionHandlerTests.cs" />
+    <Compile Include="Functional\FnTests\FuncExceptionHandlerTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

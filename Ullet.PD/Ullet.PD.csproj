@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="Functional\Fn.cs" />
     <Compile Include="Functional\FunctionalExtensions.cs" />
+    <Compile Include="Functional\Just.cs" />
+    <Compile Include="Functional\Maybe.cs" />
+    <Compile Include="Functional\Nothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

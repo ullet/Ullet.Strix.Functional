@@ -1,3 +1,9 @@
+/*
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Released to the Public Domain.  See http://unlicense.org/ or the
+ * UNLICENSE file accompanying this source code.
+ */
+
 using System;
 
 namespace Ullet.PD.Functional
@@ -23,7 +29,7 @@ namespace Ullet.PD.Functional
     /// </returns>
     /// <example>
     /// <![CDATA[
-    /// var logSqlExceptionHandler = Fn.Handler<SqlException>(ex =>
+    /// var logSqlExceptionHandler = Fn.ActionHandler<SqlException>(ex =>
     ///   {
     ///     SomeLogger.Log(ex);
     ///   });
@@ -38,18 +44,18 @@ namespace Ullet.PD.Functional
     /// /* Nested handler */
     /// 
     /// var invalidOperationHandler =
-    ///   Fn.Handler<InvalidOperationException>(ex =>
+    ///   Fn.ActionHandler<InvalidOperationException>(ex =>
     ///   {
     ///     // exception handling
     ///   };
-    /// var httpHandler = Fn.Handler<HttpException>(
+    /// var httpHandler = Fn.ActionHandler<HttpException>(
     ///   invalidOperationHandler,
     ///   ex =>
     ///   {
     ///     // exception handling
     ///   };
     /// 
-    /// // Handler to catch InvalidOperationException then HttpException
+    /// // ActionHandler to catch InvalidOperationException then HttpException
     /// // As with try..catch block, order is important if catching derived
     /// // Exception types, e.g. ArgumentNullException and ArgumentException.
     /// var invalidOperationAndHttpExceptionHandler =
@@ -83,10 +89,10 @@ namespace Ullet.PD.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> Handler<TEx>(Action<TEx> handleException)
+    public static Action<Action> ActionHandler<TEx>(Action<TEx> handleException)
       where TEx : Exception
     {
-      return Handler<TEx>(action =>
+      return ActionHandler<TEx>(action =>
       {
         handleException(action);
         return true;
@@ -119,7 +125,7 @@ namespace Ullet.PD.Functional
     /// <![CDATA[
     /// /* Conditionally handle exception */
     /// 
-    /// var notFoundWebExceptionHandler = Fn.Handler<WebException>(ex =>
+    /// var notFoundWebExceptionHandler = Fn.ActionHandler<WebException>(ex =>
     ///   {
     ///     if (((HttpWebResponse)ex.Response).StatusCode
     ///         == HttpStatusCode.NotFound)
@@ -156,9 +162,15 @@ namespace Ullet.PD.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> Handler<TEx>(Func<TEx, bool> handleException)
+    public static Action<Action> ActionHandler<TEx>(
+      Func<TEx, bool> handleException)
       where TEx : Exception
     {
+      /* 
+       * Easier and clearer to define this "long hand" rather than trying to
+       * delegate to FuncHandler.
+       */
+
       return action =>
       {
         try
@@ -170,6 +182,40 @@ namespace Ullet.PD.Functional
           var tex = ex as TEx;
           if (tex == null || !handleException(tex))
             throw;
+        }
+      };
+    }
+
+    /// <summary>
+    /// </summary>
+    public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
+      Func<TEx, TReturn> handleException)
+      where TEx : Exception
+    {
+      return FuncHandler<TEx, TReturn>(ex => Just(handleException(ex)));
+    }
+
+    /// <summary>
+    /// </summary>
+    public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
+      Func<TEx, Maybe<TReturn>> handleException)
+      where TEx : Exception
+    {
+      return fn =>
+      {
+        try
+        {
+          return fn();
+        }
+        catch (Exception ex)
+        {
+          var tex = ex as TEx;
+          Maybe<TReturn> returned = Nothing<TReturn>();
+          if (tex != null)
+            returned = handleException(tex);
+          if (returned.HasValue)
+            return returned.Value;
+          throw;
         }
       };
     }
@@ -211,6 +257,36 @@ namespace Ullet.PD.Functional
       Action<Action> outerAction, Action innerAction)
     {
       return () => outerAction(innerAction);
+    }
+
+    /// <summary> 
+    /// </summary>
+    public static Func<Func<T>, T> Nest<T>(
+      Func<Func<T>, T> outerFunc, Func<Func<T>, T> innerFunc)
+    {
+      return fn => outerFunc(() => innerFunc(fn));
+    }
+
+    /// <summary> 
+    /// </summary>
+    public static Func<T> Nest<T>(
+      Func<Func<T>, T> outerFunc, Func<T> innerFunc)
+    {
+      return () => outerFunc(innerFunc);
+    }
+
+    /// <summary>
+    /// </summary>
+    public static Maybe<T> Nothing<T>()
+    {
+      return new Nothing<T>();
+    }
+
+    /// <summary>
+    /// </summary>
+    public static Maybe<T> Just<T>(T value)
+    {
+      return new Just<T>(value);
     }
   }
 }
