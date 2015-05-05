@@ -187,7 +187,29 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
+    /// Construct an exception handler delegate handling exceptions of type
+    /// <typeparamref name="TEx"/> always returning a value of type
+    /// <typeparamref name="TReturn"/>.
     /// </summary>
+    /// <typeparam name="TEx">
+    /// Type of <see cref="Exception" /> handled by the handler.
+    /// </typeparam>
+    /// <typeparam name="TReturn">
+    /// Type returned by function delegates that can be passed to the
+    /// exception handler.
+    /// </typeparam>
+    /// <param name="handleException">
+    /// Func delegate to handle exceptions of type <typeparamref name="TEx"/>.
+    /// Always returns a, possibly null, value of type
+    /// <typeparamref name="TReturn"/>.
+    /// </param>
+    /// <returns>
+    /// Func delegate that catches and handles exceptions of the configured
+    /// type when called with an action to execute.
+    /// </returns>
+    /// <remarks>
+    /// Return value may be null for reference and Nullable types.
+    /// </remarks>
     public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
       Func<TEx, TReturn> handleException)
       where TEx : Exception
@@ -196,7 +218,33 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
+    /// Construct an exception handler delegate handling exceptions of type
+    /// <typeparamref name="TEx"/> always returning a value of type
+    /// <typeparamref name="TReturn"/>.
     /// </summary>
+    /// <typeparam name="TEx">
+    /// Type of <see cref="Exception" /> handled by the handler.
+    /// </typeparam>
+    /// <typeparam name="TReturn">
+    /// Type returned by function delegates that can be passed to the
+    /// exception handler.
+    /// </typeparam>
+    /// <param name="handleException">
+    /// Function delegate to handle exceptions of type
+    /// <typeparamref name="TEx"/>.  Optionally return a value, possibly null,
+    /// of type <typeparamref name="TReturn"/>.  Delegate must return an
+    /// instance of <see cref="Maybe{TReturn}"/> to indicate if a value has
+    /// been returned.  If HasValue property of returned instance is false then
+    /// the exception will be re-thrown to be caught by another handler or to
+    /// bubble up unhandled.
+    /// </param>
+    /// <returns>
+    /// Func delegate that catches and handles exceptions of the configured
+    /// type when called with an action to execute.
+    /// </returns>
+    /// <remarks>
+    /// Return value may be null for reference and Nullable types.
+    /// </remarks>
     public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
       Func<TEx, Maybe<TReturn>> handleException)
       where TEx : Exception
@@ -233,7 +281,7 @@ namespace Ullet.PD.Functional
     /// </param>
     /// <returns>An <![CDATA[Action<Action>]]> delegate.</returns>
     /// <remarks>
-    /// Particularly useful for nesting exception handler delegats.
+    /// Particularly useful for nesting exception handler delegates.
     /// </remarks>
     public static Action<Action> Nest(
       Action<Action> outerAction, Action<Action> innerAction)
@@ -259,23 +307,46 @@ namespace Ullet.PD.Functional
       return () => outerAction(innerAction);
     }
 
-    /// <summary> 
+    /// <summary>
+    /// Nest one Func within another.
     /// </summary>
+    /// <param name="outerFunc">
+    /// The outer <![CDATA[Func<Func<T>, T>]]> to wrap
+    /// <paramref name="innerFunc"/>.
+    /// </param>
+    /// <param name="innerFunc">
+    /// The inner <![CDATA[Func<Func<T>, T>]]> to nest inside
+    /// <paramref name="outerFunc"/>.
+    /// </param>
+    /// <returns>An <![CDATA[Func<Func<T>, T>]]> delegate.</returns>
+    /// <remarks>
+    /// Particularly useful for nesting exception handler delegates.
+    /// </remarks>
     public static Func<Func<T>, T> Nest<T>(
       Func<Func<T>, T> outerFunc, Func<Func<T>, T> innerFunc)
     {
       return fn => outerFunc(() => innerFunc(fn));
     }
 
-    /// <summary> 
+    /// <summary>
+    /// Nest one Func within another.
     /// </summary>
-    public static Func<T> Nest<T>(
-      Func<Func<T>, T> outerFunc, Func<T> innerFunc)
+    /// <param name="outerFunc">
+    /// The outer <![CDATA[Func<Func<T>, T>]]> to wrap
+    /// <paramref name="innerFunc"/>.
+    /// </param>
+    /// <param name="innerFunc">
+    /// The inner <see cref="Func{T}"/> to nest inside
+    /// <paramref name="outerFunc"/>.
+    /// </param>
+    /// <returns>An <see cref="Func{T}"/> delegate.</returns>
+    public static Func<T> Nest<T>(Func<Func<T>, T> outerFunc, Func<T> innerFunc)
     {
       return () => outerFunc(innerFunc);
     }
 
     /// <summary>
+    /// Create a <see cref="Maybe{T}"/> instance without a value.
     /// </summary>
     public static Maybe<T> Nothing<T>()
     {
@@ -283,6 +354,7 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
+    /// Create a <see cref="Maybe{T}"/> instance with a specific value.
     /// </summary>
     public static Maybe<T> Just<T>(T value)
     {
