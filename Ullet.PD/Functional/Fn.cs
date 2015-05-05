@@ -29,7 +29,7 @@ namespace Ullet.PD.Functional
     /// </returns>
     /// <example>
     /// <![CDATA[
-    /// var logSqlExceptionHandler = Fn.ActionHandler<SqlException>(ex =>
+    /// var logSqlExceptionHandler = Fn.Handler<SqlException>(ex =>
     ///   {
     ///     SomeLogger.Log(ex);
     ///   });
@@ -44,18 +44,18 @@ namespace Ullet.PD.Functional
     /// /* Nested handler */
     /// 
     /// var invalidOperationHandler =
-    ///   Fn.ActionHandler<InvalidOperationException>(ex =>
+    ///   Fn.Handler<InvalidOperationException>(ex =>
     ///   {
     ///     // exception handling
     ///   };
-    /// var httpHandler = Fn.ActionHandler<HttpException>(
+    /// var httpHandler = Fn.Handler<HttpException>(
     ///   invalidOperationHandler,
     ///   ex =>
     ///   {
     ///     // exception handling
     ///   };
     /// 
-    /// // ActionHandler to catch InvalidOperationException then HttpException
+    /// // Handler to catch InvalidOperationException then HttpException
     /// // As with try..catch block, order is important if catching derived
     /// // Exception types, e.g. ArgumentNullException and ArgumentException.
     /// var invalidOperationAndHttpExceptionHandler =
@@ -89,10 +89,10 @@ namespace Ullet.PD.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> ActionHandler<TEx>(Action<TEx> handleException)
+    public static Action<Action> Handler<TEx>(Action<TEx> handleException)
       where TEx : Exception
     {
-      return ActionHandler<TEx>(action =>
+      return Handler<TEx>(action =>
       {
         handleException(action);
         return true;
@@ -125,7 +125,7 @@ namespace Ullet.PD.Functional
     /// <![CDATA[
     /// /* Conditionally handle exception */
     /// 
-    /// var notFoundWebExceptionHandler = Fn.ActionHandler<WebException>(ex =>
+    /// var notFoundWebExceptionHandler = Fn.Handler<WebException>(ex =>
     ///   {
     ///     if (((HttpWebResponse)ex.Response).StatusCode
     ///         == HttpStatusCode.NotFound)
@@ -162,13 +162,13 @@ namespace Ullet.PD.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> ActionHandler<TEx>(
+    public static Action<Action> Handler<TEx>(
       Func<TEx, bool> handleException)
       where TEx : Exception
     {
       /* 
        * Easier and clearer to define this "long hand" rather than trying to
-       * delegate to FuncHandler.
+       * delegate to Handler<TEx, TReturn>.
        */
 
       return action =>
@@ -210,11 +210,11 @@ namespace Ullet.PD.Functional
     /// <remarks>
     /// Return value may be null for reference and Nullable types.
     /// </remarks>
-    public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
+    public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
       Func<TEx, TReturn> handleException)
       where TEx : Exception
     {
-      return FuncHandler<TEx, TReturn>(ex => Just(handleException(ex)));
+      return Handler<TEx, TReturn>(ex => Just(handleException(ex)));
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ namespace Ullet.PD.Functional
     /// <remarks>
     /// Return value may be null for reference and Nullable types.
     /// </remarks>
-    public static Func<Func<TReturn>, TReturn> FuncHandler<TEx, TReturn>(
+    public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
       Func<TEx, Maybe<TReturn>> handleException)
       where TEx : Exception
     {
