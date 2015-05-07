@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functional\Ex.cs" />
     <Compile Include="Functional\Fn.cs" />
     <Compile Include="Functional\FunctionalExtensions.cs" />
     <Compile Include="Functional\Just.cs" />

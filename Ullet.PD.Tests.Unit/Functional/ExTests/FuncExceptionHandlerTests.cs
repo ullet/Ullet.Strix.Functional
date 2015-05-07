@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Ullet.PD.Functional;
 
-namespace Ullet.PD.Tests.Unit.Functional.FnTests
+namespace Ullet.PD.Tests.Unit.Functional.ExTests
 {
   [TestFixture]
   public class FuncExceptionHandlerTests
@@ -20,7 +20,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       var handledIt = false;
 
       Func<Func<object>, object> handler
-        = Fn.Handler<ArgumentException, object>(ex =>
+        = Ex.Handler<ArgumentException, object>(ex =>
         {
           handledIt = true;
           return new object();
@@ -36,13 +36,13 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       string handledBy = null;
 
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<ArgumentException, object>(
+        Ex.Handler<ArgumentException, object>(
           ex =>
           {
             handledBy = "ArgumentException";
             return new object();
           });
-      Func<Func<object>, object> outerHandler = Fn.Handler<InvalidOperationException, object>(
+      Func<Func<object>, object> outerHandler = Ex.Handler<InvalidOperationException, object>(
         ex =>
         {
           handledBy = "InvalidOperationException";
@@ -60,13 +60,13 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       var orderCalled = new List<string>();
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<Exception, object>(ex =>
+        Ex.Handler<Exception, object>(ex =>
         {
           orderCalled.Add("Inner");
           return new object();
         });
       Func<Func<object>, object> outerHandler =
-        Fn.Handler<Exception, object>(ex =>
+        Ex.Handler<Exception, object>(ex =>
         {
           orderCalled.Add("Outer");
           return new object();
@@ -83,7 +83,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void CanConstructFuncHandlerFromConditionalHandlingDelegate()
     {
       Func<Func<object>, object> handler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -92,7 +92,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void FuncHandlerThrowsExceptionIfDelegateFunctionReturnsNothing()
     {
       Func<Func<object>, object> handler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -101,7 +101,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void FuncHandlerNotThrowExceptionIfDelegateFuncReturnsSomething()
     {
       Func<Func<object>, object> handler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Just(new object()));
+        Ex.Handler<ArgumentException, object>(ex => Fn.Just(new object()));
       Assert.DoesNotThrow(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -111,7 +111,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       var handled = false;
       Func<Func<object>, object> handler
-        = Fn.Handler<ArgumentException, object>(ex =>
+        = Ex.Handler<ArgumentException, object>(ex =>
         {
           handled = true;
           return new object();
@@ -127,9 +127,9 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       var handled = false;
 
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       Func<Func<object>, object> outerHandler = 
-        Fn.Handler<InvalidOperationException, object>(
+        Ex.Handler<InvalidOperationException, object>(
         ex =>
         {
           handled = true;
@@ -148,18 +148,18 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       var handled = false;
 
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<ArgumentNullException, object>(
+        Ex.Handler<ArgumentNullException, object>(
           ex => Fn.Nothing<object>());
       Func<Func<object>, object> middleHandler
-        = Fn.Handler<ArgumentException, object>(ex => new object());
+        = Ex.Handler<ArgumentException, object>(ex => new object());
       Func<Func<object>, object> outerHandler =
-        Fn.Handler<InvalidOperationException, object>(
+        Ex.Handler<InvalidOperationException, object>(
           ex =>
           {
             handled = true;
             return Fn.Just(new object());
           });
-      Func<Func<object>, object> nestedHandler = 
+      Func<Func<object>, object> nestedHandler =
         Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
       nestedHandler(() => { throw new InvalidOperationException(); });
 
@@ -171,21 +171,21 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       var callCount = 0;
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
         ex =>
         {
           callCount++;
           return Fn.Nothing<object>();
         });
       Func<Func<object>, object> middleHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
         ex =>
         {
           callCount++;
           return Fn.Nothing<object>();
         });
       Func<Func<object>, object> outerHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
         ex =>
         {
           callCount++;
@@ -204,21 +204,21 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       var orderCalled = new List<string>();
       Func<Func<object>, object> innerHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
         ex =>
         {
           orderCalled.Add("inner");
           return Fn.Nothing<object>();
         });
       Func<Func<object>, object> middleHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
           ex =>
           {
             orderCalled.Add("middle");
             return Fn.Nothing<object>();
           });
       Func<Func<object>, object> outerHandler =
-        Fn.Handler<Exception, object>(
+        Ex.Handler<Exception, object>(
         ex =>
         {
           orderCalled.Add("outer");
@@ -226,7 +226,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         });
       var nestedHandler =
         Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
-      
+
       nestedHandler(() => { throw new Exception(); });
 
       Assert.That(
@@ -237,7 +237,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void ExceptionUnhandledByFuncHandlerRetainsStackTrace()
     {
       var handler =
-        Fn.Handler<InvalidOperationException, object>(ex => new object());
+        Ex.Handler<InvalidOperationException, object>(ex => new object());
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
           {
@@ -254,7 +254,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void ExceptionReThrownByFuncHandlerRetainsStackTrace()
     {
       var handler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {
@@ -271,9 +271,9 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void ExceptionUnhandledByNestedActionHandlerRetainsStackTrace()
     {
       var innerHandler =
-        Fn.Handler<InvalidOperationException, object>(ex => new object());
+        Ex.Handler<InvalidOperationException, object>(ex => new object());
       var outerHandler =
-        Fn.Handler<MissingMethodException, object>(ex => new object());
+        Ex.Handler<MissingMethodException, object>(ex => new object());
       var handler = Fn.Nest(innerHandler, outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
@@ -291,9 +291,9 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     public void ExceptionReThrownByNestedActionHandlerRetainsStackTrace()
     {
       var innerHandler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       var outerHandler =
-        Fn.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       var handler = Fn.Nest(innerHandler, outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
@@ -305,6 +305,44 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
 
       Assert.That(
         argEx.StackTrace, Is.StringContaining("ThrowArgumentException"));
+    }
+
+    [Test]
+    public void ReturnValuePassedThroughWhenNoException()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => Fn.Nothing<int>());
+      
+      var returned = handler(() => 42);
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void ValueReturnedFromHandlerWhenExceptionHandled()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => Fn.Just(42));
+
+      var returned = handler(() => {throw new Exception();});
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void ValueReturnedFromFirstHandlerThatCanHandleException()
+    {
+      var handler = Fn.Nest(
+        Ex.Handler<Exception, int>(ex => Fn.Just(4)),
+        Fn.Nest(
+          Ex.Handler<ArgumentException, int>(ex => Fn.Just(3)),
+          Fn.Nest(
+            Ex.Handler<ArgumentException, int>(ex => Fn.Just(2)),
+            Fn.Nest(
+              Ex.Handler<ArgumentException, int>(ex => Fn.Nothing<int>()),
+              Ex.Handler<InvalidOperationException, int>(ex => Fn.Just(1))))));
+
+      var returned = handler(() => { throw new ArgumentException(); });
+
+      Assert.That(returned, Is.EqualTo(2));
     }
 
     private static void ThrowArgumentException(

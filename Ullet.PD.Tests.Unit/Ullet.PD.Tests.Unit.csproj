@@ -45,8 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Functional\FnTests\ActionExceptionHandlerTests.cs" />
-    <Compile Include="Functional\FnTests\FuncExceptionHandlerTests.cs" />
+    <Compile Include="Functional\ExTests\ActionExceptionHandlerTests.cs" />
+    <Compile Include="Functional\ExTests\FuncExceptionHandlerTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -58,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Functional\FnTests\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
