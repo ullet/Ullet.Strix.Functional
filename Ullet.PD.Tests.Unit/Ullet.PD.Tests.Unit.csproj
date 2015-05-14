@@ -47,7 +47,11 @@
   <ItemGroup>
     <Compile Include="Functional\ExTests\ActionExceptionHandlerTests.cs" />
     <Compile Include="Functional\ExTests\FuncExceptionHandlerTests.cs" />
-    <Compile Include="Functional\FunctionalExtensionsTests.cs" />
+    <Compile Include="Functional\FunctionalExtensionsTests\ComposeTests.cs" />
+    <Compile Include="Functional\FunctionalExtensionsTests\CurryTests.cs" />
+    <Compile Include="Functional\FunctionalExtensionsTests\FlipTests.cs" />
+    <Compile Include="Functional\FunctionalExtensionsTests\PartialTests.cs" />
+    <Compile Include="Functional\FunctionalExtensionsTests\UncurryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
