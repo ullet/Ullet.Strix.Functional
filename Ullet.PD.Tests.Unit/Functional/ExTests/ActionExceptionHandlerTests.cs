@@ -257,6 +257,78 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
         argEx.StackTrace, Is.StringContaining("ThrowArgumentException"));
     }
 
+    [Test]
+    public void FinallyBlockAlwaysCalledIfNoExceptionForActionDelegateHandler()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception>(
+        ex => { }, () => finallyWasCalled = true);
+
+      handler(() => { });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfNoExceptionForFuncDelegateHandler()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception>(
+        ex => false, () => finallyWasCalled = true);
+
+      handler(() => { });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfHandledForActionDelegateHandler()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception>(
+        ex => { }, () => finallyWasCalled = true);
+
+      handler(() => { throw new Exception(); });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfHandledForFuncDelegateHandler()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception>(
+        ex => true, () => finallyWasCalled = true);
+
+      handler(() => { throw new Exception(); });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfExceptionUnhandled()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<ArgumentException>(
+        ex => true, () => finallyWasCalled = true);
+
+      Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfExceptionBubbledUp()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception>(
+        ex => false, () => finallyWasCalled = true);
+
+      Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
     private static void ThrowArgumentException(
       string message, Exception innerException)
     {

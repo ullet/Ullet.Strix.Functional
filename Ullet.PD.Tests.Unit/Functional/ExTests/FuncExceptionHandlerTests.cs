@@ -308,7 +308,17 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
     }
 
     [Test]
-    public void ReturnValuePassedThroughWhenNoException()
+    public void ReturnValuePassedThroughWhenNoExceptionForCapturingDelegate()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => -1);
+
+      var returned = handler(() => 42);
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void ReturnValuePassedThroughWhenNoExceptionForConditionalDelegate()
     {
       var handler = Ex.Handler<Exception, int>(ex => Fn.Nothing<int>());
       
@@ -318,7 +328,17 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
     }
 
     [Test]
-    public void ValueReturnedFromHandlerWhenExceptionHandled()
+    public void ValueReturnedFromHandlerWhenHandledForCapturingDelegate()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => 42);
+
+      var returned = handler(() => { throw new Exception(); });
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void ValueReturnedFromHandlerWhenHandledForConditionalDelegate()
     {
       var handler = Ex.Handler<Exception, int>(ex => Fn.Just(42));
 
@@ -328,7 +348,23 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
     }
 
     [Test]
-    public void ValueReturnedFromFirstHandlerThatCanHandleException()
+    public void ValueReturnedFromFirstHandlerThatCanHandleExceptionCapturing()
+    {
+      var handler = Fn.Nest(
+        Ex.Handler<Exception, int>(ex => 4),
+        Fn.Nest(
+          Ex.Handler<ArgumentException, int>(ex => 3),
+          Fn.Nest(
+            Ex.Handler<ArgumentException, int>(ex => 2),
+            Ex.Handler<InvalidOperationException, int>(ex => 1))));
+
+      var returned = handler(() => { throw new ArgumentException(); });
+
+      Assert.That(returned, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void ValueReturnedFromFirstHandlerThatCanHandleExceptionConditional()
     {
       var handler = Fn.Nest(
         Ex.Handler<Exception, int>(ex => Fn.Just(4)),
@@ -343,6 +379,131 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
       var returned = handler(() => { throw new ArgumentException(); });
 
       Assert.That(returned, Is.EqualTo(2));
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfNoExceptionForCapturingDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception, int>(
+        ex => -1, () => finallyWasCalled = true);
+
+      handler(() => 42);
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void ReturnValuePassedThroughWhenNoExceptionAndFinallyForCapturing()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => -1, () => { });
+
+      var returned = handler(() => 42);
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfNoExceptionForConditionalDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception, int>(
+        ex => Fn.Nothing<int>(), () => finallyWasCalled = true);
+
+      handler(() => 42);
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void ReturnValuePassedThruWhenNoExceptionAndFinallyForConditional()
+    {
+      var handler = Ex.Handler<Exception, int>(
+        ex => Fn.Nothing<int>(), () => { });
+
+      var returned = handler(() => 42);
+
+      Assert.That(returned, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfHandledForCapturingDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception, int>(
+        ex => -1, () => finallyWasCalled = true);
+
+      handler(() => { throw new Exception(); });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void ReturnValueFromHandlerWithFinallyBlockForCapturingDelegate()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => -1, () => { });
+
+      var returned = handler(() => { throw new Exception(); });
+
+      Assert.That(returned, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfHandledForConditionalDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception, int>(
+        ex => Fn.Just(-1), () => finallyWasCalled = true);
+
+      handler(() => { throw new Exception(); });
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void ReturnValueFromHandlerWithFinallyBlockForConditionalDelegate()
+    {
+      var handler = Ex.Handler<Exception, int>(ex => Fn.Just(-1), () => { });
+
+      var returned = handler(() => { throw new Exception(); });
+
+      Assert.That(returned, Is.EqualTo(-1));
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfUnhandledForCapturingDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<ArgumentException, int>(
+        ex => -1, () => finallyWasCalled = true);
+
+      Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfUnhandledForConditionalDelegate()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<ArgumentException, int>(
+        ex => Fn.Just(-1), () => finallyWasCalled = true);
+
+      Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
+
+      Assert.That(finallyWasCalled, Is.True);
+    }
+
+    [Test]
+    public void FinallyBlockAlwaysCalledIfExceptionBubbledUp()
+    {
+      var finallyWasCalled = false;
+      var handler = Ex.Handler<Exception, int>(
+        ex => Fn.Nothing<int>(), () => finallyWasCalled = true);
+
+      Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
+
+      Assert.That(finallyWasCalled, Is.True);
     }
 
     private static void ThrowArgumentException(

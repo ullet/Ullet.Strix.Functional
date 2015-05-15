@@ -23,6 +23,10 @@ namespace Ullet.PD.Functional
     /// <param name="handleException">
     /// Action delegate to handle exceptions of type <typeparamref name="TEx"/>
     /// </param>
+    /// <param name="finallyBlock">
+    /// Optional Action delegate that is always called before returning from the
+    /// try-catch block.
+    /// </param>
     /// <returns>
     /// Action delegate that catches and handles exceptions of the configured
     /// type when called with an action to execute.
@@ -89,14 +93,17 @@ namespace Ullet.PD.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> Handler<TEx>(Action<TEx> handleException)
+    public static Action<Action> Handler<TEx>(
+      Action<TEx> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
-      return Handler<TEx>(action =>
-      {
-        handleException(action);
-        return true;
-      });
+      return Handler<TEx>(
+        action =>
+        {
+          handleException(action);
+          return true;
+        },
+        finallyBlock);
     }
 
     /// <summary>
@@ -110,6 +117,10 @@ namespace Ullet.PD.Functional
     /// Function delegate to handle exceptions of type 
     /// <typeparamref name="TEx"/>.  Return true if exception is handled and
     /// should not propogate, or false to re-throw exception.
+    /// </param>
+    /// <param name="finallyBlock">
+    /// Optional Action delegate that is always called before returning from the
+    /// try-catch block.
     /// </param>
     /// <returns>
     /// Action delegate that catches and handles exceptions of the configured
@@ -163,7 +174,7 @@ namespace Ullet.PD.Functional
     /// ]]>
     /// </example>
     public static Action<Action> Handler<TEx>(
-      Func<TEx, bool> handleException)
+      Func<TEx, bool> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
       /* 
@@ -182,6 +193,11 @@ namespace Ullet.PD.Functional
           var tex = ex as TEx;
           if (tex == null || !handleException(tex))
             throw;
+        }
+        finally
+        {
+          if (finallyBlock != null)
+            finallyBlock();
         }
       };
     }
@@ -203,6 +219,10 @@ namespace Ullet.PD.Functional
     /// Always returns a, possibly null, value of type
     /// <typeparamref name="TReturn"/>.
     /// </param>
+    /// <param name="finallyBlock">
+    /// Optional Action delegate that is always called before returning from the
+    /// try-catch block.
+    /// </param>
     /// <returns>
     /// Func delegate that catches and handles exceptions of the configured
     /// type when called with an action to execute.
@@ -211,10 +231,11 @@ namespace Ullet.PD.Functional
     /// Return value may be null for reference and Nullable types.
     /// </remarks>
     public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
-      Func<TEx, TReturn> handleException)
+      Func<TEx, TReturn> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
-      return Handler<TEx, TReturn>(ex => Fn.Just(handleException(ex)));
+      return Handler<TEx, TReturn>(
+        ex => Fn.Just(handleException(ex)), finallyBlock);
     }
 
     /// <summary>
@@ -238,6 +259,10 @@ namespace Ullet.PD.Functional
     /// the exception will be re-thrown to be caught by another handler or to
     /// bubble up unhandled.
     /// </param>
+    /// <param name="finallyBlock">
+    /// Optional Action delegate that is always called before returning from the
+    /// try-catch block.
+    /// </param>
     /// <returns>
     /// Func delegate that catches and handles exceptions of the configured
     /// type when called with an action to execute.
@@ -246,7 +271,7 @@ namespace Ullet.PD.Functional
     /// Return value may be null for reference and Nullable types.
     /// </remarks>
     public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
-      Func<TEx, Maybe<TReturn>> handleException)
+      Func<TEx, Maybe<TReturn>> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
       return fn =>
@@ -264,6 +289,11 @@ namespace Ullet.PD.Functional
           if (returned.HasValue)
             return returned.Value;
           throw;
+        }
+        finally
+        {
+          if (finallyBlock != null)
+            finallyBlock();
         }
       };
     }
