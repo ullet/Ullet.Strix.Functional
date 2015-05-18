@@ -38,7 +38,7 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
-    /// Partially apply function with all parameter fixed.
+    /// Partially apply function with all parameters fixed.
     /// </summary>
     public static Func<TOut> Partial<T1, T2, TOut>(
       this Func<T1, T2, TOut> fn, T1 t1, T2 t2)
@@ -77,6 +77,58 @@ namespace Ullet.PD.Functional
       this Func<T1, T2, T3, TOut> fn, T1 t1, T2 t2, T3 t3)
     {
       return () => fn(t1, t2, t3);
+    }
+
+    /// <summary>
+    /// Partially apply action with all parameters fixed.
+    /// </summary>
+    public static Action Partial<T>(this Action<T> action, T t)
+    {
+      return () => action(t);
+    }
+
+    /// <summary>
+    /// Partially apply action with first parameter fixed.
+    /// </summary>
+    public static Action<T2> Partial<T1, T2>(this Action<T1, T2> action, T1 t1)
+    {
+      return t2 => action(t1, t2);
+    }
+
+    /// <summary>
+    /// Partially apply action with all parameters fixed.
+    /// </summary>
+    public static Action Partial<T1, T2>(
+      this Action<T1, T2> action, T1 t1, T2 t2)
+    {
+      return () => action(t1, t2);
+    }
+
+    /// <summary>
+    /// Partially apply action with first parameter fixed.
+    /// </summary>
+    public static Action<T2, T3> Partial<T1, T2, T3>(
+      this Action<T1, T2, T3> action, T1 t1)
+    {
+      return (t2, t3) => action(t1, t2, t3);
+    }
+
+    /// <summary>
+    /// Partially apply action with first two parameters fixed.
+    /// </summary>
+    public static Action<T3> Partial<T1, T2, T3>(
+      this Action<T1, T2, T3> action, T1 t1, T2 t2)
+    {
+      return t3 => action(t1, t2, t3);
+    }
+
+    /// <summary>
+    /// Partially apply action with all parameters fixed.
+    /// </summary>
+    public static Action Partial<T1, T2, T3>(
+      this Action<T1, T2, T3> action, T1 t1, T2 t2, T3 t3)
+    {
+      return () => action(t1, t2, t3);
     }
 
     /// <summary>

@@ -86,5 +86,95 @@ namespace Ullet.PD.Tests.Unit.Functional.FunctionalExtensionsTests
 
       Assert.That(oneTimes2(), Is.EqualTo(new[] {6}));
     }
+
+    [Test]
+    public void PartialFromOneParameterActionAndOneParameter()
+    {
+      int theVar = 0;
+      Action<int> initVar = x => theVar = x;
+
+      var initVarTo123 = initVar.Partial(123);
+
+      initVarTo123();
+      Assert.That(theVar, Is.EqualTo(123));
+    }
+
+    [Test]
+    public void PartialFromTwoParameterActionAndOneParameter()
+    {
+      int theVar = 0;
+      Action<int, int> initToDiff = (a, b) => theVar = a - b;
+
+      var initSubtractingFrom100 = initToDiff.Partial(100);
+
+      initSubtractingFrom100(10);
+      Assert.That(theVar, Is.EqualTo(90));
+    }
+
+    [Test]
+    public void PartialFromTwoParameterActionAndTwoParameters()
+    {
+      double theVar = 0;
+      Action<int, int> initToAdivB = (a, b) => theVar = (double)a / b;
+
+      var initToThreeQuarters = initToAdivB.Partial(3, 4);
+
+      initToThreeQuarters();
+      Assert.That(theVar, Is.EqualTo(0.75));
+    }
+
+    [Test]
+    public void PartialFromThreeParameterActionAndOneParameter()
+    {
+      string theVar = null;
+      Action<string, string, string> initWithReplace =
+        (oldValue, newValue, s) => theVar = s.Replace(oldValue, newValue);
+
+      var initWithReplaceAllBs = initWithReplace.Partial("b");
+
+      initWithReplaceAllBs("g", "wibble");
+      Assert.That(theVar, Is.EqualTo("wiggle"));
+    }
+
+    [Test]
+    public void PartialFromThreeParameterActionAndTwoParameters()
+    {
+      double theVar = 0;
+      Action<int, int, int> initFromExpression =
+        (a, b, c) => theVar = (a + b)/(double) c;
+
+      var initByDivide150ByX = initFromExpression.Partial(100, 50);
+
+      initByDivide150ByX(5);
+      Assert.That(theVar, Is.EqualTo(30));
+    }
+
+    [Test]
+    public void PartialFromThreeParameterActionAndThreeParameters()
+    {
+      string theVar = null;
+      Action<char, char, char> initFromConcat =
+        (a, b, c) => theVar = a.ToString() + b + c;
+
+      var initOneTwoThree = initFromConcat.Partial('1', '2', '3');
+
+      initOneTwoThree();
+      Assert.That(theVar, Is.EqualTo("123"));
+    }
+
+    [Test]
+    public void ConstructedPartialActionNotEvaluatedUntilCalled()
+    {
+      int[] theVar = null;
+      Action<int[]> initTimes2 =
+        numbers => theVar = numbers.Select(n => n * 2).ToArray();
+      var mutable = new[] { 1 };
+
+      Action initOneTimes2 = initTimes2.Partial(mutable);
+      mutable[0] = 3;
+
+      initOneTimes2();
+      Assert.That(theVar, Is.EqualTo(new[] { 6 }));
+    }
   }
 }
