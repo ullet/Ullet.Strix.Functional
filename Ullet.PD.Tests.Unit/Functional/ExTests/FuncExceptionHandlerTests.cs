@@ -506,6 +506,35 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
       Assert.That(finallyWasCalled, Is.True);
     }
 
+    [Test]
+    public void CanConstructFuncWithBuiltInExceptionHandling()
+    {
+      var funcWithExceptionHandling =
+        Ex.Handler<ArgumentException, int>(ex => 42).Partial(() =>
+        {
+          throw new ArgumentException();
+        });
+
+      var result = funcWithExceptionHandling();
+
+      Assert.That(result, Is.EqualTo(42));
+    }
+
+    [Test]
+    public void CanConstructParameterisedFuncWithBuiltInExceptionHandling()
+    {
+      Func<string, string, string, string> funcWithExceptionHandling =
+        (a, b, c) =>
+          Ex.Handler<ArgumentException, string>(ex => ex.Message).Partial(() =>
+          {
+            throw new ArgumentException(a + b + c);
+          })();
+
+      var result = funcWithExceptionHandling("Hel", "lo, wo", "rld!");
+
+      Assert.That(result, Is.EqualTo("Hello, world!"));
+    }
+
     private static void ThrowArgumentException(
       string message, Exception innerException)
     {

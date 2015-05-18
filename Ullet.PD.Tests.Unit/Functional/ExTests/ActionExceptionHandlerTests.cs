@@ -329,6 +329,21 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
       Assert.That(finallyWasCalled, Is.True);
     }
 
+    [Test]
+    public void CanConstructActionWithBuiltInExceptionHandling()
+    {
+      var handledIt = false;
+      var actionWithExceptionHandling =
+        Ex.Handler<ArgumentException>(ex => handledIt = true).Partial(() =>
+        {
+          throw new ArgumentException();
+        });
+
+      actionWithExceptionHandling();
+
+      Assert.That(handledIt, Is.True);
+    }
+
     private static void ThrowArgumentException(
       string message, Exception innerException)
     {
