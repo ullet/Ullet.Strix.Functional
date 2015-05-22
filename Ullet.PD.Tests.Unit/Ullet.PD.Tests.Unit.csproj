@@ -47,11 +47,16 @@
   <ItemGroup>
     <Compile Include="Functional\ExTests\ActionExceptionHandlerTests.cs" />
     <Compile Include="Functional\ExTests\FuncExceptionHandlerTests.cs" />
+    <Compile Include="Functional\FnTests\JustTests.cs" />
+    <Compile Include="Functional\FnTests\NestTests.cs" />
+    <Compile Include="Functional\FnTests\NothingTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests\ComposeTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests\CurryTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests\FlipTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests\PartialTests.cs" />
     <Compile Include="Functional\FunctionalExtensionsTests\UncurryTests.cs" />
+    <Compile Include="Functional\JustTests.cs" />
+    <Compile Include="Functional\NothingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +68,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Functional\FnTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -49,5 +49,42 @@ namespace Ullet.PD.Functional
     {
       return new Just<T>(value);
     }
+
+    /// <summary>
+    /// Determines whether the specified <see cref="T:System.Object"/> is equal
+    /// to the current <see cref="T:System.Object"/>.
+    /// </summary>
+    public override bool Equals(object obj)
+    {
+      if (ReferenceEquals(this, obj))
+        return true;
+      var maybe = obj as Maybe<T>;
+      if (maybe == null)
+        return false;
+      return (HasValue && maybe.HasValue && Equals(Value, maybe.Value)) ||
+             (!HasValue && !maybe.HasValue);
+    }
+
+    /// <summary>
+    /// Serves as a hash function for the type.
+    /// </summary>
+    public override int GetHashCode()
+    {
+      return HasValue
+        ? (Equals(Value, null)
+          ? 0
+          : typeof (T).GetHashCode() ^ Value.GetHashCode())
+        : -typeof (T).GetHashCode();
+    }
+
+    /// <summary>
+    /// Returns a string that represents the current object.
+    /// </summary>
+    public override string ToString()
+    {
+      return HasValue
+        ? (Equals(Value, null) ? "<null>" : Value.ToString())
+        : string.Format("<nothing<{0}>>", typeof(T).Name);
+    }
   }
 }
