@@ -144,5 +144,27 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Assert.That(composed(12), Is.EqualTo(expectedComposed(12)));
       Assert.That(composed(12), Is.EqualTo(666));
     }
+
+    [Test]
+    public void ComposeUnaryFunctionWithBinaryFunction()
+    {
+      Func<int, int, int> sumTwoValues = (x, y) => x + y;
+      Func<int, int> square = x => x*x;
+
+      var squareOfSum = square.Compose(sumTwoValues);
+
+      Assert.That(squareOfSum(2, 3), Is.EqualTo(25));
+    }
+
+    [Test]
+    public void ComposeUnaryFunctionWithTernaryFunction()
+    {
+      Func<int, int, int, int> sumThreeValues = (x, y, z) => x + y + z;
+      Func<int, int> square = x => x * x;
+
+      var squareOfSum = square.Compose(sumThreeValues);
+
+      Assert.That(squareOfSum(2, 3, 4), Is.EqualTo(81));
+    }
   }
 }

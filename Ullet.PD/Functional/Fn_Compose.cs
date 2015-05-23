@@ -90,5 +90,23 @@ namespace Ullet.PD.Functional
     {
       return funcs.Reverse().Compose();
     }
+
+    /// <summary>
+    /// Compose unary outer function with binary inner function.
+    /// </summary>
+    public static Func<T1, T2, T4> Compose<T1, T2, T3, T4>(
+      this Func<T3, T4> outer, Func<T1, T2, T3> inner)
+    {
+      return (x, y) => outer(inner(x, y));
+    }
+
+    /// <summary>
+    /// Compose unary outer function with ternary inner function.
+    /// </summary>
+    public static Func<T1, T2, T3, T5> Compose<T1, T2, T3, T4, T5>(
+      this Func<T4, T5> outer, Func<T1, T2, T3, T4> inner)
+    {
+      return (x, y, z) => outer(inner(x, y, z));
+    }
   }
 }
