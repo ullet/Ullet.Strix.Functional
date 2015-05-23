@@ -46,7 +46,11 @@
   <ItemGroup>
     <Compile Include="Functional\Ex.cs" />
     <Compile Include="Functional\Fn.cs" />
-    <Compile Include="Functional\FunctionalExtensions.cs" />
+    <Compile Include="Functional\Fn_Compose.cs" />
+    <Compile Include="Functional\Fn_Curry.cs" />
+    <Compile Include="Functional\Fn_Flip.cs" />
+    <Compile Include="Functional\Fn_Nest.cs" />
+    <Compile Include="Functional\Fn_Partial.cs" />
     <Compile Include="Functional\Just.cs" />
     <Compile Include="Functional\Maybe.cs" />
     <Compile Include="Functional\Nothing.cs" />
