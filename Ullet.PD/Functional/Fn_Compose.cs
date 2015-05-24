@@ -97,7 +97,7 @@ namespace Ullet.PD.Functional
     public static Func<T1, T2, T4> Compose<T1, T2, T3, T4>(
       this Func<T3, T4> outer, Func<T1, T2, T3> inner)
     {
-      return (x, y) => outer(inner(x, y));
+      return (t1, t2) => outer(inner(t1, t2));
     }
 
     /// <summary>
@@ -106,7 +106,16 @@ namespace Ullet.PD.Functional
     public static Func<T1, T2, T3, T5> Compose<T1, T2, T3, T4, T5>(
       this Func<T4, T5> outer, Func<T1, T2, T3, T4> inner)
     {
-      return (x, y, z) => outer(inner(x, y, z));
+      return (t1, t2, t3) => outer(inner(t1, t2, t3));
+    }
+
+    /// <summary>
+    /// Compose outer action with unary inner function.
+    /// </summary>
+    public static Action<T1> Compose<T1, T2>(
+      this Action<T2> outer, Func<T1, T2> inner)
+    {
+      return t1 => outer(inner(t1));
     }
   }
 }

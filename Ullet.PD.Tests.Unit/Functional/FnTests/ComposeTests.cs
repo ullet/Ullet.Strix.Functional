@@ -166,5 +166,18 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
 
       Assert.That(squareOfSum(2, 3, 4), Is.EqualTo(81));
     }
+
+    [Test]
+    public void ComposeActionWithUnaryFunction()
+    {
+      double result = 0;
+      Func<int, double> squareRoot = x => Math.Sqrt(x);
+      Action<double> setResult = x => result = x;
+
+      Action<int> setResultToSquare = setResult.Compose(squareRoot);
+
+      setResultToSquare(12);
+      Assert.That(result, Is.EqualTo(3.464D).Within(0.0005D));
+    }
   }
 }
