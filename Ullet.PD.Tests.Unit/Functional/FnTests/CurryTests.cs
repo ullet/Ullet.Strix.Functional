@@ -61,6 +61,61 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     }
 
     [Test]
+    public void CanCurryTwoParameterAction()
+    {
+      string result = null;
+      Action<char, int> uncurried = (c, count) => result =new string(c, count);
+
+      Func<char, Action<int>> curried = Fn.Curry(uncurried);
+
+      curried('X')(4);
+      Assert.That(result, Is.EqualTo("XXXX"));
+    }
+
+    [Test]
+    public void CanCurryThreeParameterAction()
+    {
+      double result = 0;
+      Action<int, long, float> uncurried =
+        (i, l, f) => result = ((double)(i + l)) / f;
+
+      Func<int, Func<long, Action<float>>> curried = Fn.Curry(uncurried);
+
+      curried(10)(4L)(2.0f);
+      Assert.That(result, Is.EqualTo(7.0D));
+    }
+
+    [Test]
+    public void CanCurryFourParameterAction()
+    {
+      string result = null;
+      Action<string, string[], int, int> uncurried =
+        (separator, values, startIndex, count) =>
+          result = string.Join(separator, values, startIndex, count);
+
+      Func<string, Func<string[], Func<int, Action<int>>>> curried =
+        Fn.Curry(uncurried);
+
+      curried("-")(new[] {"a", "b", "c", "d"})(1)(2);
+      Assert.That(result, Is.EqualTo("b-c"));
+    }
+
+    [Test]
+    public void CanCurryFiveParameterAction()
+    {
+      int result = 0;
+      Action<string, int, string, int, int> uncurried =
+        (strA, indexA, strB, indexB, length) =>
+          result = string.Compare(strA, indexA, strB, indexB, length);
+
+      Func<string, Func<int, Func<string, Func<int, Action<int>>>>>
+        curried = Fn.Curry(uncurried);
+
+      curried("pontificate")(0)("cattle")(0)(3);
+      Assert.That(result, Is.EqualTo(1));
+    }
+
+    [Test]
     public void CanCurryTwoParameterFunctionAsExtensionMethod()
     {
       Func<char, int, string> uncurried = (c, count) => new string(c, count);
@@ -105,6 +160,61 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Assert.That(
         curried("pontificate")(0)("cattle")(0)(3),
         Is.EqualTo(uncurried("pontificate", 0, "cattle", 0, 3)));
+    }
+
+    [Test]
+    public void CanCurryTwoParameterActionAsExtensionMethod()
+    {
+      string result = null;
+      Action<char, int> uncurried = (c, count) => result = new string(c, count);
+
+      Func<char, Action<int>> curried = uncurried.Curry();
+
+      curried('X')(4);
+      Assert.That(result, Is.EqualTo("XXXX"));
+    }
+
+    [Test]
+    public void CanCurryThreeParameterActionAsExtensionMethod()
+    {
+      double result = 0;
+      Action<int, long, float> uncurried =
+        (i, l, f) => result = ((double)(i + l)) / f;
+
+      Func<int, Func<long, Action<float>>> curried = uncurried.Curry();
+
+      curried(10)(4L)(2.0f);
+      Assert.That(result, Is.EqualTo(7.0D));
+    }
+
+    [Test]
+    public void CanCurryFourParameterActionAsExtensionMethod()
+    {
+      string result = null;
+      Action<string, string[], int, int> uncurried =
+        (separator, values, startIndex, count) =>
+          result = string.Join(separator, values, startIndex, count);
+
+      Func<string, Func<string[], Func<int, Action<int>>>> curried =
+        uncurried.Curry();
+
+      curried("-")(new[] { "a", "b", "c", "d" })(1)(2);
+      Assert.That(result, Is.EqualTo("b-c"));
+    }
+
+    [Test]
+    public void CanCurryFiveParameterActionAsExtensionMethod()
+    {
+      int result = 0;
+      Action<string, int, string, int, int> uncurried =
+        (strA, indexA, strB, indexB, length) =>
+          result = string.Compare(strA, indexA, strB, indexB, length);
+
+      Func<string, Func<int, Func<string, Func<int, Action<int>>>>>
+        curried = uncurried.Curry();
+
+      curried("pontificate")(0)("cattle")(0)(3);
+      Assert.That(result, Is.EqualTo(1));
     }
   }
 }
