@@ -117,5 +117,19 @@ namespace Ullet.PD.Functional
     {
       return t1 => outer(inner(t1));
     }
+
+    /// <summary>
+    /// Return unary function that returns the result of composing
+    /// <paramref name="g"/> with its input function.
+    /// </summary>
+    /// <returns>
+    /// Function that transforms function T3->T1 to new function T3->T2 as
+    /// result of applying function <paramref name="g"/> T1->T2.
+    /// </returns>
+    public static Func<Func<T3, T1>, Func<T3, T2>> Result<T1, T2, T3>(
+      Func<T1, T2> g)
+    {
+      return f => x => g(f(x));
+    }
   }
 }

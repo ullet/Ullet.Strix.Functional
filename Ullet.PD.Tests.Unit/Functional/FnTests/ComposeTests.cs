@@ -179,5 +179,18 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       setResultToSquare(12);
       Assert.That(result, Is.EqualTo(3.464D).Within(0.0005D));
     }
+
+    [Test]
+    public void ResultIsComposeAsCurriedFunction()
+    {
+      Func<int, double> square = x => x * x;
+      Func<int[], int> sum = a => a.Sum();
+
+      Func<Func<int[], int>, Func<int[], double>>
+        resultOfSquare = Fn.Result<int, double, int[]>(square);
+
+      var squareOfSum = resultOfSquare(sum);
+      Assert.That(squareOfSum(new[] { 1, 2, 3, 4 }), Is.EqualTo(100));
+    }
   }
 }
