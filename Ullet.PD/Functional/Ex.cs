@@ -46,7 +46,7 @@ namespace Ullet.PD.Functional
     /// <example>
     /// <![CDATA[
     /// /* Nested handler */
-    /// 
+    ///
     /// var invalidOperationHandler =
     ///   Ex.Handler<InvalidOperationException>(ex =>
     ///   {
@@ -58,20 +58,20 @@ namespace Ullet.PD.Functional
     ///   {
     ///     // exception handling
     ///   };
-    /// 
+    ///
     /// // Handler to catch InvalidOperationException then HttpException
     /// // As with try..catch block, order is important if catching derived
     /// // Exception types, e.g. ArgumentNullException and ArgumentException.
     /// var invalidOperationAndHttpExceptionHandler =
     ///   Ex.Nest(httpHandler, invalidOperationHandler)
-    /// 
+    ///
     /// var someTask = () => {
     ///   // do some work
     /// };
-    /// 
+    ///
     /// // Do task with exception handling
     /// invalidOperationAndHttpExceptionHandler(someTask);
-    /// 
+    ///
     /// /* This example is equivalent to nested try..catch blocks:
     ///  *
     ///  * try
@@ -114,7 +114,7 @@ namespace Ullet.PD.Functional
     /// Type of <see cref="Exception" /> handled by the handler.
     /// </typeparam>
     /// <param name="handleException">
-    /// Function delegate to handle exceptions of type 
+    /// Function delegate to handle exceptions of type
     /// <typeparamref name="TEx"/>.  Return true if exception is handled and
     /// should not propogate, or false to re-throw exception.
     /// </param>
@@ -135,7 +135,7 @@ namespace Ullet.PD.Functional
     /// <example>
     /// <![CDATA[
     /// /* Conditionally handle exception */
-    /// 
+    ///
     /// var notFoundWebExceptionHandler = Ex.Handler<WebException>(ex =>
     ///   {
     ///     if (((HttpWebResponse)ex.Response).StatusCode
@@ -150,7 +150,7 @@ namespace Ullet.PD.Functional
     ///       return false;
     ///     }
     ///   });
-    /// 
+    ///
     /// /* When called with an action is equivalent to:
     ///  *
     ///  * try
@@ -177,7 +177,7 @@ namespace Ullet.PD.Functional
       Func<TEx, bool> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
-      /* 
+      /*
        * Easier and clearer to define this "long hand" rather than trying to
        * delegate to Handler<TEx, TReturn>.
        */

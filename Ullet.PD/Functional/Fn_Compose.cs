@@ -32,7 +32,7 @@ namespace Ullet.PD.Functional
     {
       return t => outer(inner(t));
     }
-    
+
     /// <summary>
     /// Compose <paramref name="outer"/> function with
     /// <paramref name="inner"/> function.

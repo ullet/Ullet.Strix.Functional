@@ -128,7 +128,7 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
 
       Func<Func<object>, object> innerHandler =
         Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
-      Func<Func<object>, object> outerHandler = 
+      Func<Func<object>, object> outerHandler =
         Ex.Handler<InvalidOperationException, object>(
         ex =>
         {
@@ -321,7 +321,7 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
     public void ReturnValuePassedThroughWhenNoExceptionForConditionalDelegate()
     {
       var handler = Ex.Handler<Exception, int>(ex => Fn.Nothing<int>());
-      
+
       var returned = handler(() => 42);
 
       Assert.That(returned, Is.EqualTo(42));

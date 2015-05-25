@@ -24,7 +24,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         action();
         trace.Add("end-outer");
       };
-      
+
       Action<Action> nested = Fn.Nest(outerAction, innerAction);
 
       nested(() => trace.Add("action"));

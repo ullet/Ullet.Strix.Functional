@@ -11,7 +11,7 @@ namespace Ullet.PD.Functional
   public static partial class Fn
   {
     /// <summary>
-    /// Construct a new function taking same parameters as original but with 
+    /// Construct a new function taking same parameters as original but with
     /// order of first two parameters reversed.
     /// </summary>
     /*
@@ -20,10 +20,10 @@ namespace Ullet.PD.Functional
      * one that typically want to leave unbound.  For example the
      * Enumerable.Select method takes the list to enumerate as the first
      * parameter and the function to execute on the list as the second.
-     * Flipping the parameter order allow partial application by fixing the 
+     * Flipping the parameter order allow partial application by fixing the
      * function and leaving the list unbound.
      * e.g.
-     * Func<IEnumerable<int>, Func<int, int>, IEnumerable<int>> 
+     * Func<IEnumerable<int>, Func<int, int>, IEnumerable<int>>
      *   select = System.Linq.Enumerable.Select;
      * var selectSquares = select.Flip().Partial(x => x*x);
      * var squares = selectSquares(new[] {1, 2, 3}); //=> enumerable [1, 4, 9]
@@ -35,7 +35,7 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
-    /// Construct a new function taking same parameters as original but with 
+    /// Construct a new function taking same parameters as original but with
     /// order of first two parameters reversed.
     /// </summary>
     public static Func<T2, T1, T3, TOut> Flip<T1, T2, T3, TOut>(
@@ -45,7 +45,7 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
-    /// Construct a new function taking same parameters as original but with 
+    /// Construct a new function taking same parameters as original but with
     /// order of first two parameters reversed.
     /// </summary>
     public static Func<T2, T1, T3, T4, TOut> Flip<T1, T2, T3, T4, TOut>(
@@ -55,7 +55,7 @@ namespace Ullet.PD.Functional
     }
 
     /// <summary>
-    /// Construct a new function taking same parameters as original but with 
+    /// Construct a new function taking same parameters as original but with
     /// order of first two parameters reversed.
     /// </summary>
     public static Func<T2, T1, T3, T4, T5, TOut>

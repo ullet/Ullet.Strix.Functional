@@ -47,7 +47,7 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
       var orderCalled = new List<string>();
       Action<Action> innerHandler
         = Ex.Handler<Exception>(ex => orderCalled.Add("Inner"));
-      Action<Action> outerHandler 
+      Action<Action> outerHandler
         = Ex.Handler<Exception>(ex => orderCalled.Add("Outer"));
       Action<Action> nestedHandler = Fn.Nest(outerHandler, innerHandler);
 
@@ -117,7 +117,7 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
 
       Action<Action> innerHandler
         = Ex.Handler<ArgumentNullException>(ex => false);
-      Action<Action> middleHandler 
+      Action<Action> middleHandler
         = Ex.Handler<ArgumentException>(ex => { });
       Action<Action> outerHandler = Ex.Handler<InvalidOperationException>(
         ex =>
@@ -186,7 +186,7 @@ namespace Ullet.PD.Tests.Unit.Functional.ExTests
         });
       var nestedHandler =
         Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
-      
+
       nestedHandler(() => { throw new Exception(); });
 
       Assert.That(

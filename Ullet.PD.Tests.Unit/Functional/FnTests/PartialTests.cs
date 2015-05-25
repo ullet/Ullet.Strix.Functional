@@ -78,7 +78,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     [Test]
     public void PartialFromFourParameterFunctionAndOneParameter()
     {
-      Func<char, char, char, char, string> concat = 
+      Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
       Func<char, char, char, string> concatToOne = Fn.Partial(concat, '1');
