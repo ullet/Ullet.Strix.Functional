@@ -17,7 +17,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     [Test]
     public void FlipOrderFirstTwoOfTwoParameters()
     {
-      Func<int, double, double> divide = (a, b) => a/b;
+      Func<int, double, double> divide = (a, b) => a / b;
 
       Func<double, int, double> flipped = Fn.Flip(divide);
 
@@ -150,7 +150,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<Func<int, int, int>, int, IEnumerable<int>, int>
         flippedAggregate = Fn.FlipAll(aggregate);
 
-      var list = new[] {2, 3, 5};
+      var list = new[] { 2, 3, 5 };
       const int seed = 210;
       Func<int, int, int> aggregator = (acc, x) => acc/x;
       Assert.That(
@@ -223,6 +223,73 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         concat.FlipAll();
 
       Assert.That(flippedConcat('a', 'b', 'c', 'd', 'e'), Is.EqualTo("edcba"));
+    }
+
+    [Test]
+    public void FlipOrderFirstTwoOfTwoParametersForCurriedFunction()
+    {
+      Func<int, Func<double, double>> divide = a => b => a / b;
+
+      Func<double, Func<int, double>> flipped = Fn.Flip(divide);
+
+      Assert.That(flipped(4.0)(1), Is.EqualTo(0.25));
+    }
+
+    [Test]
+    public void FlipOrderFirstTwoOfThreeParametersForCurriedFunction()
+    {
+      Func<byte, Func<int, Func<long, double>>> sum =
+        a => b => c => (double) a + b + c;
+
+      Func<int, Func<byte, Func<long, double>>> flipped = Fn.Flip(sum);
+
+      Assert.That(flipped(256)(1)(33L), Is.EqualTo(290));
+    }
+
+    [Test]
+    public void FlipOrderFirstTwoOfTwentyParametersForCurriedFunction()
+    {
+      /*
+       * Ridiculous example to demonstrate no limit on number of parameters for
+       * a function in curried form without having to implement lots of method
+       * overloads.
+       */
+
+      Func<int, Func<int, Func<int, Func<int, Func<int, Func<int, Func<int,
+        Func<int, Func<int, Func<int, Func<int, Func<int, Func<int, Func<int,
+          Func<int, Func<int, Func<int, Func<int, Func<int, Func<int,
+            string>>>>>>>>>>>>>>>>>>>> concat =
+              a => b => c => d => e => f => g => h => i => j =>
+                k => l => m => n => o => p => q => r => s => t =>
+                  a.ToString() + b + c + d + e + f + g + h + i + j +
+                  k + l + m + n + o + p + q + r + s + t;
+
+      var flipped = Fn.Flip(concat);
+
+      Assert.That(
+        flipped(1)(2)(3)(4)(5)(6)(7)(8)(9)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0)(0),
+        Is.EqualTo("21345678900000000000"));
+    }
+
+    [Test]
+    public void FlipOrderFirstTwoOfTwoParametersForCurriedFunctionAsExtMethod()
+    {
+      Func<int, Func<double, double>> divide = a => b => a / b;
+
+      Func<double, Func<int, double>> flipped = divide.Flip();
+
+      Assert.That(flipped(4.0)(1), Is.EqualTo(0.25));
+    }
+
+    [Test]
+    public void FlipOrderFirst2Of3ParametersForCurriedFunctionAsExtMethod()
+    {
+      Func<byte, Func<int, Func<long, double>>> sum =
+        a => b => c => (double)a + b + c;
+
+      Func<int, Func<byte, Func<long, double>>> flipped = sum.Flip();
+
+      Assert.That(flipped(256)(1)(33L), Is.EqualTo(290));
     }
   }
 }
