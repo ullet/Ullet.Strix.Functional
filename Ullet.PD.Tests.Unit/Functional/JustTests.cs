@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Ullet.PD.Functional;
 
 namespace Ullet.PD.Tests.Unit.Functional

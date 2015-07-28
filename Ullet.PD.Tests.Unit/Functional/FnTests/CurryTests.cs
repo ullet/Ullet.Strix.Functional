@@ -18,6 +18,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<char, int, string> uncurried = (c, count) => new string(c, count);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, Func<int, string>> curried = Fn.Curry(uncurried);
 
       Assert.That(curried('X')(4), Is.EqualTo(uncurried('X', 4)));
@@ -29,6 +30,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<int, long, float, double> uncurried =
         (i, l, f) => ((double) (i + l))/f;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int, Func<long, Func<float, double>>> curried = Fn.Curry(uncurried);
 
       Assert.That(curried(10)(4L)(2.0f), Is.EqualTo(uncurried(10, 4L, 2.0f)));
@@ -39,6 +41,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<string, string[], int, int, string> uncurried = string.Join;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string, Func<string[], Func<int, Func<int, string>>>> curried =
         Fn.Curry(uncurried);
 
@@ -52,6 +55,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<string, int, string, int, int, int> uncurried = string.Compare;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string, Func<int, Func<string, Func<int, Func<int, int>>>>>
         curried = Fn.Curry(uncurried);
 
@@ -66,6 +70,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       string result = null;
       Action<char, int> uncurried = (c, count) => result =new string(c, count);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, Action<int>> curried = Fn.Curry(uncurried);
 
       curried('X')(4);
@@ -79,6 +84,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<int, long, float> uncurried =
         (i, l, f) => result = ((double)(i + l)) / f;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int, Func<long, Action<float>>> curried = Fn.Curry(uncurried);
 
       curried(10)(4L)(2.0f);
@@ -93,6 +99,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         (separator, values, startIndex, count) =>
           result = string.Join(separator, values, startIndex, count);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string, Func<string[], Func<int, Action<int>>>> curried =
         Fn.Curry(uncurried);
 
@@ -108,6 +115,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         (strA, indexA, strB, indexB, length) =>
           result = string.Compare(strA, indexA, strB, indexB, length);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string, Func<int, Func<string, Func<int, Action<int>>>>>
         curried = Fn.Curry(uncurried);
 

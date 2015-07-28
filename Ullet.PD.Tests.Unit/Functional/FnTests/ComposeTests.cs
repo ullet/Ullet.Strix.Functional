@@ -20,6 +20,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<int, int> square = x => x*x;
       Func<int[], int> sum = a => a.Sum();
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var squareOfSum = Fn.Compose(square, sum);
 
       Assert.That(squareOfSum(new []{1,2,3,4}), Is.EqualTo(100));
@@ -31,6 +32,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<int, int> square = x => x * x;
       Func<int[], int> sum = a => a.Sum();
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var squareOfSum = Fn.ComposeReverse(sum, square);
 
       Assert.That(squareOfSum(new[] { 1, 2, 3, 4 }), Is.EqualTo(100));

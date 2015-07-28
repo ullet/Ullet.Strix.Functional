@@ -19,6 +19,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, string> toString = i => i.ToString();
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var string123 = Fn.Partial(toString, 123);
 
       Assert.That(string123(), Is.EqualTo("123"));
@@ -29,6 +30,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, int, int> subtract = (a, b) => a - b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var subtractFrom100 = Fn.Partial(subtract, 100);
 
       Assert.That(subtractFrom100(10), Is.EqualTo(90));
@@ -39,6 +41,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, int, double> divide = (a, b) => (double) a/b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var threeQuarters = Fn.Partial(divide, 3, 4);
 
       Assert.That(threeQuarters(), Is.EqualTo(0.75));
@@ -50,6 +53,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<string, string, string, string> replace =
         (oldValue, newValue, s) => s.Replace(oldValue, newValue);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var replaceAllBs = Fn.Partial(replace, "b");
 
       Assert.That(replaceAllBs("g", "wibble"), Is.EqualTo("wiggle"));
@@ -60,6 +64,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, int, int, double> expression = (a, b, c) => (a + b)/(double) c;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var divide150ByX = Fn.Partial(expression, 100, 50);
 
       Assert.That(divide150ByX(5), Is.EqualTo(30));
@@ -70,6 +75,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<char, char, char, string> concat = (a, b, c) => a.ToString() + b + c;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var oneTwoThree = Fn.Partial(concat, '1', '2', '3');
 
       Assert.That(oneTwoThree(), Is.EqualTo("123"));
@@ -81,6 +87,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, string> concatToOne = Fn.Partial(concat, '1');
 
       Assert.That(concatToOne('2', '3', '4'), Is.EqualTo("1234"));
@@ -92,6 +99,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, string> concatToOneTwo =
         Fn.Partial(concat, '1', '2');
 
@@ -104,6 +112,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, string> concatToOneTwoThree =
         Fn.Partial(concat, '1', '2', '3');
 
@@ -116,6 +125,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string> oneTwoThreeFour =
         Fn.Partial(concat, '1', '2', '3', '4');
 
@@ -128,6 +138,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, char, string> concatToOne =
         Fn.Partial(concat, '1');
 
@@ -140,6 +151,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, string> concatToOneTwo =
         Fn.Partial(concat, '1', '2');
 
@@ -152,6 +164,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, string> concatToOneTwoThree =
         Fn.Partial(concat, '1', '2', '3');
 
@@ -164,6 +177,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, string> concatToOneTwoThreeFour =
         Fn.Partial(concat, '1', '2', '3', '4');
 
@@ -176,6 +190,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<string> oneTwoThreeFourFive =
         Fn.Partial(concat, '1', '2', '3', '4', '5');
 
@@ -188,6 +203,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<int[], int[]> times2 = numbers => numbers.Select(n => n*2).ToArray();
       var mutable = new[] {1};
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int[]> oneTimes2 = Fn.Partial(times2, mutable);
       mutable[0] = 3;
 
@@ -200,6 +216,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       int result = 0;
       Action<int> initVar = x => result = x;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initVarTo123 = Fn.Partial(initVar, 123);
 
       initVarTo123();
@@ -212,6 +229,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       int result = 0;
       Action<int, int> initToDiff = (a, b) => result = a - b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initSubtractingFrom100 = Fn.Partial(initToDiff, 100);
 
       initSubtractingFrom100(10);
@@ -224,6 +242,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       double result = 0;
       Action<int, int> initToAdivB = (a, b) => result = (double)a / b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initToThreeQuarters = Fn.Partial(initToAdivB, 3, 4);
 
       initToThreeQuarters();
@@ -237,6 +256,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<string, string, string> initWithReplace =
         (oldValue, newValue, s) => result = s.Replace(oldValue, newValue);
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initWithReplaceAllBs = Fn.Partial(initWithReplace, "b");
 
       initWithReplaceAllBs("g", "wibble");
@@ -250,6 +270,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<int, int, int> initFromExpression =
         (a, b, c) => result = (a + b)/(double) c;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initByDivide150ByX = Fn.Partial(initFromExpression, 100, 50);
 
       initByDivide150ByX(5);
@@ -263,6 +284,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char> initFromConcat =
         (a, b, c) => result = a.ToString() + b + c;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
 
       initOneTwoThree();
@@ -276,6 +298,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOne = Fn.Partial(initFromConcat, '1');
 
       initConcatToOne('2', '3', '4');
@@ -289,6 +312,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOneTwo = Fn.Partial(initFromConcat, '1', '2');
 
       initConcatToOneTwo('3', '4');
@@ -302,6 +326,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
 
       initConcatToOneTwoThree('4');
@@ -315,6 +340,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initToOneTwoThreeFour =
         Fn.Partial(initFromConcat, '1', '2', '3', '4');
 
@@ -329,6 +355,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOne = Fn.Partial(initFromConcat, '1');
 
       initConcatToOne('2', '3', '4', '5');
@@ -342,6 +369,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOneTwo = Fn.Partial(initFromConcat, '1', '2');
 
       initConcatToOneTwo('3', '4', '5');
@@ -355,6 +383,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
 
       initConcatToOneTwoThree('4', '5');
@@ -368,6 +397,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initConcatToOneTwoThreeFour =
         Fn.Partial(initFromConcat, '1', '2', '3', '4');
 
@@ -382,6 +412,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       var initToOneTwoThreeFourFive =
         Fn.Partial(initFromConcat, '1', '2', '3', '4', '5');
 
@@ -397,6 +428,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         numbers => result = numbers.Select(n => n * 2).ToArray();
       var mutable = new[] { 1 };
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Action initOneTimes2 = Fn.Partial(initTimes2, mutable);
       mutable[0] = 3;
 

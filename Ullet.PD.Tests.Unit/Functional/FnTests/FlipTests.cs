@@ -19,6 +19,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, double, double> divide = (a, b) => a / b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<double, int, double> flipped = Fn.Flip(divide);
 
       Assert.That(flipped(4.0, 1), Is.EqualTo(0.25));
@@ -42,6 +43,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         aggregate = System.Linq.Enumerable.Aggregate;
 
       // (aggregator, seed, list) => result
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int, IEnumerable<int>, Func<int, int, int>, int>
         flippedAggregate = Fn.Flip(aggregate);
 
@@ -62,6 +64,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         aggregate = System.Linq.Enumerable.Aggregate;
 
       // (aggregator, seed, list) => result
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int, IEnumerable<int>, Func<int, int, int>, int>
         flippedAggregate = Fn.Flip(aggregate);
 
@@ -80,6 +83,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, char, string> flippedConcat = Fn.Flip(concat);
 
       Assert.That(flippedConcat('a', 'b', 'c', 'd'), Is.EqualTo("bacd"));
@@ -102,6 +106,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, char, char, string> flippedConcat =
         Fn.Flip(concat);
 
@@ -124,6 +129,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, double, double> divide = (a, b) => a / b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<double, int, double> flipped = Fn.FlipAll(divide);
 
       Assert.That(flipped(4.0, 1), Is.EqualTo(0.25));
@@ -147,6 +153,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
         aggregate = System.Linq.Enumerable.Aggregate;
 
       // (aggregator, seed, list) => result
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<Func<int, int, int>, int, IEnumerable<int>, int>
         flippedAggregate = Fn.FlipAll(aggregate);
 
@@ -185,6 +192,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, char, string> flippedConcat = Fn.FlipAll(concat);
 
       Assert.That(flippedConcat('a', 'b', 'c', 'd'), Is.EqualTo("dcba"));
@@ -207,6 +215,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, char, char, char, string> flippedConcat =
         Fn.FlipAll(concat);
 
@@ -230,6 +239,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
     {
       Func<int, Func<double, double>> divide = a => b => a / b;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<double, Func<int, double>> flipped = Fn.Flip(divide);
 
       Assert.That(flipped(4.0)(1), Is.EqualTo(0.25));
@@ -241,6 +251,7 @@ namespace Ullet.PD.Tests.Unit.Functional.FnTests
       Func<byte, Func<int, Func<long, double>>> sum =
         a => b => c => (double) a + b + c;
 
+      // ReSharper disable once InvokeAsExtensionMethod
       Func<int, Func<byte, Func<long, double>>> flipped = Fn.Flip(sum);
 
       Assert.That(flipped(256)(1)(33L), Is.EqualTo(290));
