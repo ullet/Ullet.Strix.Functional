@@ -7,7 +7,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Ullet.PD")]
+[assembly: AssemblyTitle("Ullet.PD.Functional.Tests.Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 
 [assembly: ComVisible(false)]
 
-[assembly: Guid("74d3c0b9-d1b5-4c1c-833a-c9fd57b827ae")]
+[assembly: Guid("aee2457d-4d58-4211-a66d-cf11711d0011")]
 
 [assembly: AssemblyVersion("0.0.0.0")]
 [assembly: AssemblyFileVersion("0.0.0.0")]

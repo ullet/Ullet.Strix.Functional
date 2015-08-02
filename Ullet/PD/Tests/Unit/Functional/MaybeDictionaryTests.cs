@@ -6,9 +6,8 @@
 
 using System.Collections.Generic;
 using NUnit.Framework;
-using Ullet.PD.Functional;
 
-namespace Ullet.PD.Tests.Unit.Functional
+namespace Ullet.PD.Functional.Tests.Unit
 {
   [TestFixture]
   public class MaybeDictionaryTests

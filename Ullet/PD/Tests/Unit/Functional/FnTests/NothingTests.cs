@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
-using Ullet.PD.Functional;
 
-namespace Ullet.PD.Tests.Unit.Functional.FnTests
+namespace Ullet.PD.Functional.Tests.Unit.FnTests
 {
   [TestFixture]
   public class NothingTests
