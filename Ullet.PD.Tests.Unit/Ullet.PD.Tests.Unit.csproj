@@ -56,6 +56,7 @@
     <Compile Include="Functional\FnTests\PartialTests.cs" />
     <Compile Include="Functional\FnTests\UncurryTests.cs" />
     <Compile Include="Functional\JustTests.cs" />
+    <Compile Include="Functional\MaybeDictionaryTests.cs" />
     <Compile Include="Functional\NothingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

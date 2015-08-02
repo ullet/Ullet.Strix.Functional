@@ -53,6 +53,7 @@
     <Compile Include="Functional\Fn_Partial.cs" />
     <Compile Include="Functional\Just.cs" />
     <Compile Include="Functional\Maybe.cs" />
+    <Compile Include="Functional\MaybeDictionary.cs" />
     <Compile Include="Functional\Nothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
