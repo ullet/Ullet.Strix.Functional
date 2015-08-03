@@ -1,4 +1,4 @@
-# Some C# Functional Code
+# Ullet.Strix.Functional - Some C# Functional Code
 
 A collection of C# functions, extension methods, and such, that might just be useful for working in a more functional style.
 
