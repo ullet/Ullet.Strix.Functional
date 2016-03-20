@@ -13,6 +13,18 @@ namespace Ullet.Strix.Functional
     /// <summary>
     /// Convert function to curried form.
     /// </summary>
+    /// <remarks>
+    /// A unary function is already in curried form, so Curry in this case is
+    /// simply the identity function.
+    /// </remarks>
+    public static Func<T, TOut> Curry<T, TOut>(this Func<T, TOut> fn)
+    {
+      return fn;
+    }
+
+    /// <summary>
+    /// Convert function to curried form.
+    /// </summary>
     public static Func<T1, Func<T2, TOut>> Curry<T1, T2, TOut>(
       this Func<T1, T2, TOut> fn)
     {
@@ -44,6 +56,18 @@ namespace Ullet.Strix.Functional
       Curry<T1, T2, T3, T4, T5, TOut>(this Func<T1, T2, T3, T4, T5, TOut> fn)
     {
       return t1 => t2 => t3 => t4 => t5 => fn(t1, t2, t3, t4, t5);
+    }
+
+    /// <summary>
+    /// Convert action to curried form.
+    /// </summary>
+    /// <remarks>
+    /// A unary action is already in curried form, so Curry in this case is
+    /// simply the identity function.
+    /// </remarks>
+    public static Action<T> Curry<T>(this Action<T> a)
+    {
+      return a;
     }
 
     /// <summary>
@@ -82,7 +106,20 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried function to non-curried form.
+    /// Convert function to non-curried form.
+    /// </summary>
+    /// <remarks>
+    /// A unary function that doesn't return another function is already in
+    /// non-curried form, so Uncurry in this case is simply the identity
+    /// function.
+    /// </remarks>
+    public static Func<T, TOut> Uncurry<T, TOut>(this Func<T, TOut> fn)
+    {
+      return fn;
+    }
+
+    /// <summary>
+    /// Convert function to non-curried form.
     /// </summary>
     public static Func<T1, T2, TOut> Uncurry<T1, T2, TOut>(
       this Func<T1, Func<T2, TOut>> fn)
@@ -91,7 +128,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried function to non-curried form.
+    /// Convert function to non-curried form.
     /// </summary>
     public static Func<T1, T2, T3, TOut> Uncurry<T1, T2, T3, TOut>(
       this Func<T1, Func<T2, Func<T3, TOut>>> fn)
@@ -100,7 +137,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried function to non-curried form.
+    /// Convert function to non-curried form.
     /// </summary>
     public static Func<T1, T2, T3, T4, TOut> Uncurry<T1, T2, T3, T4, TOut>(
       this Func<T1, Func<T2, Func<T3, Func<T4, TOut>>>> fn)
@@ -109,7 +146,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried function to non-curried form.
+    /// Convert function to non-curried form.
     /// </summary>
     public static Func<T1, T2, T3, T4, T5, TOut>
       Uncurry<T1, T2, T3, T4, T5, TOut>(
@@ -119,7 +156,19 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried action to non-curried form.
+    /// Convert action to non-curried form.
+    /// </summary>
+    /// <remarks>
+    /// A unary action is already in non-curried form, so Uncurry in this case
+    /// is simply the identity function.
+    /// </remarks>
+    public static Action<T> Uncurry<T>(this Action<T> a)
+    {
+      return a;
+    }
+
+    /// <summary>
+    /// Convert action to non-curried form.
     /// </summary>
     public static Action<T1, T2> Uncurry<T1, T2>(this Func<T1, Action<T2>> fn)
     {
@@ -127,7 +176,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried action to non-curried form.
+    /// Convert action to non-curried form.
     /// </summary>
     public static Action<T1, T2, T3> Uncurry<T1, T2, T3>(
       this Func<T1, Func<T2, Action<T3>>> fn)
@@ -136,7 +185,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried action to non-curried form.
+    /// Convert action to non-curried form.
     /// </summary>
     public static Action<T1, T2, T3, T4> Uncurry<T1, T2, T3, T4>(
       this Func<T1, Func<T2, Func<T3, Action<T4>>>> fn)
@@ -145,7 +194,7 @@ namespace Ullet.Strix.Functional
     }
 
     /// <summary>
-    /// Convert curried action to non-curried form.
+    /// Convert action to non-curried form.
     /// </summary>
     public static Action<T1, T2, T3, T4, T5> Uncurry<T1, T2, T3, T4, T5>(
       this Func<T1, Func<T2, Func<T3, Func<T4, Action<T5>>>>> fn)

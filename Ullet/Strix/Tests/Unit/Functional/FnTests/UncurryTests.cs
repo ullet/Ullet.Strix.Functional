@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Ullet.Strix.Functional.Tests.Unit.FnTests
@@ -12,6 +13,20 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
   [TestFixture]
   public class UncurryTests
   {
+    [Test]
+    public void UncurriedFormOfUnaryFunctionIsItself()
+    {
+      Func<int, int> curried = a => a + 1;
+
+      // ReSharper disable once InvokeAsExtensionMethod
+      Func<int, int> uncurried = Fn.Uncurry(curried);
+
+      var inputs = RandomValues(100);
+      var resultsViaCurried = inputs.Select(curried).ToArray();
+      var resultsViaUncurried = inputs.Select(uncurried).ToArray();
+      Assert.That(resultsViaUncurried, Is.EqualTo(resultsViaCurried));
+    }
+
     [Test]
     public void CanUncurryToTwoParameterFunction()
     {
@@ -59,6 +74,23 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 
       Assert.That(uncurried("pontificate", 0, "cattle", 0, 3),
         Is.EqualTo(curried("pontificate")(0)("cattle")(0)(3)));
+    }
+
+    [Test]
+    public void UncurriedFormOfUnaryActionIsItself()
+    {
+      int result = 0;
+      Action<int> curried = a => result = a + 1;
+
+      // ReSharper disable once InvokeAsExtensionMethod
+      Action<int> uncurried = Fn.Uncurry(curried);
+
+      var input = new Random().Next();
+      curried(input);
+      var resultViaCurried = result;
+      uncurried(input);
+      var resultViaUncurried = result;
+      Assert.That(resultViaUncurried, Is.EqualTo(resultViaCurried));
     }
 
     [Test]
@@ -212,6 +244,12 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 
       uncurried("pontificate", 0, "cattle", 0, 3);
       Assert.That(result, Is.EqualTo(1));
+    }
+
+    private static int[] RandomValues(int count)
+    {
+      var random = new Random();
+      return Enumerable.Range(1, count).Select(x => random.Next()).ToArray();
     }
   }
 }
