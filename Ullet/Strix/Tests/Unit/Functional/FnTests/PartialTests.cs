@@ -18,8 +18,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     {
       Func<int, string> toString = i => i.ToString();
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var string123 = Fn.Partial(toString, 123);
+      var string123 = toString.Partial(123);
 
       Assert.That(string123(), Is.EqualTo("123"));
     }
@@ -29,8 +28,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     {
       Func<int, int, int> subtract = (a, b) => a - b;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var subtractFrom100 = Fn.Partial(subtract, 100);
+      var subtractFrom100 = subtract.Partial(100);
 
       Assert.That(subtractFrom100(10), Is.EqualTo(90));
     }
@@ -40,8 +38,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     {
       Func<int, int, double> divide = (a, b) => (double) a/b;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var threeQuarters = Fn.Partial(divide, 3, 4);
+      var threeQuarters = divide.Partial(3, 4);
 
       Assert.That(threeQuarters(), Is.EqualTo(0.75));
     }
@@ -52,8 +49,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<string, string, string, string> replace =
         (oldValue, newValue, s) => s.Replace(oldValue, newValue);
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var replaceAllBs = Fn.Partial(replace, "b");
+      var replaceAllBs = replace.Partial("b");
 
       Assert.That(replaceAllBs("g", "wibble"), Is.EqualTo("wiggle"));
     }
@@ -63,8 +59,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     {
       Func<int, int, int, double> expression = (a, b, c) => (a + b)/(double) c;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var divide150ByX = Fn.Partial(expression, 100, 50);
+      var divide150ByX = expression.Partial(100, 50);
 
       Assert.That(divide150ByX(5), Is.EqualTo(30));
     }
@@ -74,8 +69,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     {
       Func<char, char, char, string> concat = (a, b, c) => a.ToString() + b + c;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var oneTwoThree = Fn.Partial(concat, '1', '2', '3');
+      var oneTwoThree = concat.Partial('1', '2', '3');
 
       Assert.That(oneTwoThree(), Is.EqualTo("123"));
     }
@@ -86,8 +80,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<char, char, char, string> concatToOne = Fn.Partial(concat, '1');
+      Func<char, char, char, string> concatToOne = concat.Partial('1');
 
       Assert.That(concatToOne('2', '3', '4'), Is.EqualTo("1234"));
     }
@@ -98,9 +91,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<char, char, string> concatToOneTwo =
-        Fn.Partial(concat, '1', '2');
+      Func<char, char, string> concatToOneTwo = concat.Partial('1', '2');
 
       Assert.That(concatToOneTwo('3', '4'), Is.EqualTo("1234"));
     }
@@ -111,9 +102,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<char, string> concatToOneTwoThree =
-        Fn.Partial(concat, '1', '2', '3');
+      Func<char, string> concatToOneTwoThree = concat.Partial('1', '2', '3');
 
       Assert.That(concatToOneTwoThree('4'), Is.EqualTo("1234"));
     }
@@ -124,9 +113,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, string> concat =
         (a, b, c, d) => a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<string> oneTwoThreeFour =
-        Fn.Partial(concat, '1', '2', '3', '4');
+      Func<string> oneTwoThreeFour = concat.Partial('1', '2', '3', '4');
 
       Assert.That(oneTwoThreeFour(), Is.EqualTo("1234"));
     }
@@ -137,9 +124,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<char, char, char, char, string> concatToOne =
-        Fn.Partial(concat, '1');
+      Func<char, char, char, char, string> concatToOne = concat.Partial('1');
 
       Assert.That(concatToOne('2', '3', '4', '5'), Is.EqualTo("12345"));
     }
@@ -150,9 +135,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<char, char, char, string> concatToOneTwo =
-        Fn.Partial(concat, '1', '2');
+      Func<char, char, char, string> concatToOneTwo = concat.Partial('1', '2');
 
       Assert.That(concatToOneTwo('3', '4', '5'), Is.EqualTo("12345"));
     }
@@ -163,9 +146,8 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, char, string> concatToOneTwoThree =
-        Fn.Partial(concat, '1', '2', '3');
+        concat.Partial('1', '2', '3');
 
       Assert.That(concatToOneTwoThree('4', '5'), Is.EqualTo("12345"));
     }
@@ -176,9 +158,8 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
       Func<char, string> concatToOneTwoThreeFour =
-        Fn.Partial(concat, '1', '2', '3', '4');
+        concat.Partial('1', '2', '3', '4');
 
       Assert.That(concatToOneTwoThreeFour('5'), Is.EqualTo("12345"));
     }
@@ -189,9 +170,8 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<char, char, char, char, char, string> concat =
         (a, b, c, d, e) => a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
       Func<string> oneTwoThreeFourFive =
-        Fn.Partial(concat, '1', '2', '3', '4', '5');
+        concat.Partial('1', '2', '3', '4', '5');
 
       Assert.That(oneTwoThreeFourFive(), Is.EqualTo("12345"));
     }
@@ -202,8 +182,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<int[], int[]> times2 = numbers => numbers.Select(n => n*2).ToArray();
       var mutable = new[] {1};
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      Func<int[]> oneTimes2 = Fn.Partial(times2, mutable);
+      Func<int[]> oneTimes2 = times2.Partial(mutable);
       mutable[0] = 3;
 
       Assert.That(oneTimes2(), Is.EqualTo(new[] {6}));
@@ -215,8 +194,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       int result = 0;
       Action<int> initVar = x => result = x;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initVarTo123 = Fn.Partial(initVar, 123);
+      var initVarTo123 = initVar.Partial(123);
 
       initVarTo123();
       Assert.That(result, Is.EqualTo(123));
@@ -228,8 +206,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       int result = 0;
       Action<int, int> initToDiff = (a, b) => result = a - b;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initSubtractingFrom100 = Fn.Partial(initToDiff, 100);
+      var initSubtractingFrom100 = initToDiff.Partial(100);
 
       initSubtractingFrom100(10);
       Assert.That(result, Is.EqualTo(90));
@@ -241,8 +218,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       double result = 0;
       Action<int, int> initToAdivB = (a, b) => result = (double)a / b;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initToThreeQuarters = Fn.Partial(initToAdivB, 3, 4);
+      var initToThreeQuarters = initToAdivB.Partial(3, 4);
 
       initToThreeQuarters();
       Assert.That(result, Is.EqualTo(0.75));
@@ -255,8 +231,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<string, string, string> initWithReplace =
         (oldValue, newValue, s) => result = s.Replace(oldValue, newValue);
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initWithReplaceAllBs = Fn.Partial(initWithReplace, "b");
+      var initWithReplaceAllBs = initWithReplace.Partial("b");
 
       initWithReplaceAllBs("g", "wibble");
       Assert.That(result, Is.EqualTo("wiggle"));
@@ -269,8 +244,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<int, int, int> initFromExpression =
         (a, b, c) => result = (a + b)/(double) c;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initByDivide150ByX = Fn.Partial(initFromExpression, 100, 50);
+      var initByDivide150ByX = initFromExpression.Partial(100, 50);
 
       initByDivide150ByX(5);
       Assert.That(result, Is.EqualTo(30));
@@ -283,8 +257,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char> initFromConcat =
         (a, b, c) => result = a.ToString() + b + c;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
+      var initOneTwoThree = initFromConcat.Partial('1', '2', '3');
 
       initOneTwoThree();
       Assert.That(result, Is.EqualTo("123"));
@@ -297,8 +270,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOne = Fn.Partial(initFromConcat, '1');
+      var initConcatToOne = initFromConcat.Partial('1');
 
       initConcatToOne('2', '3', '4');
       Assert.That(result, Is.EqualTo("1234"));
@@ -311,8 +283,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOneTwo = Fn.Partial(initFromConcat, '1', '2');
+      var initConcatToOneTwo = initFromConcat.Partial('1', '2');
 
       initConcatToOneTwo('3', '4');
       Assert.That(result, Is.EqualTo("1234"));
@@ -325,8 +296,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
+      var initConcatToOneTwoThree = initFromConcat.Partial('1', '2', '3');
 
       initConcatToOneTwoThree('4');
       Assert.That(result, Is.EqualTo("1234"));
@@ -339,9 +309,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char> initFromConcat =
         (a, b, c, d) => result = a.ToString() + b + c + d;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initToOneTwoThreeFour =
-        Fn.Partial(initFromConcat, '1', '2', '3', '4');
+      var initToOneTwoThreeFour = initFromConcat.Partial('1', '2', '3', '4');
 
       initToOneTwoThreeFour();
       Assert.That(result, Is.EqualTo("1234"));
@@ -354,8 +322,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOne = Fn.Partial(initFromConcat, '1');
+      var initConcatToOne = initFromConcat.Partial('1');
 
       initConcatToOne('2', '3', '4', '5');
       Assert.That(result, Is.EqualTo("12345"));
@@ -368,8 +335,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOneTwo = Fn.Partial(initFromConcat, '1', '2');
+      var initConcatToOneTwo = initFromConcat.Partial('1', '2');
 
       initConcatToOneTwo('3', '4', '5');
       Assert.That(result, Is.EqualTo("12345"));
@@ -382,8 +348,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<char, char, char, char, char> initFromConcat =
         (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
 
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOneTwoThree = Fn.Partial(initFromConcat, '1', '2', '3');
+      var initConcatToOneTwoThree = initFromConcat.Partial('1', '2', '3');
 
       initConcatToOneTwoThree('4', '5');
       Assert.That(result, Is.EqualTo("12345"));
@@ -391,397 +356,6 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 
     [Test]
     public void PartialFromFiveParameterActionAndFourParameters()
-    {
-      string result = null;
-      Action<char, char, char, char, char> initFromConcat =
-        (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
-
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initConcatToOneTwoThreeFour =
-        Fn.Partial(initFromConcat, '1', '2', '3', '4');
-
-      initConcatToOneTwoThreeFour('5');
-      Assert.That(result, Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterActionAndFiveParameters()
-    {
-      string result = null;
-      Action<char, char, char, char, char> initFromConcat =
-        (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
-
-      // ReSharper disable once InvokeAsExtensionMethod
-      var initToOneTwoThreeFourFive =
-        Fn.Partial(initFromConcat, '1', '2', '3', '4', '5');
-
-      initToOneTwoThreeFourFive();
-      Assert.That(result, Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void ConstructedPartialActionNotEvaluatedUntilCalled()
-    {
-      int[] result = null;
-      Action<int[]> initTimes2 =
-        numbers => result = numbers.Select(n => n * 2).ToArray();
-      var mutable = new[] { 1 };
-
-      // ReSharper disable once InvokeAsExtensionMethod
-      Action initOneTimes2 = Fn.Partial(initTimes2, mutable);
-      mutable[0] = 3;
-
-      initOneTimes2();
-      Assert.That(result, Is.EqualTo(new[] { 6 }));
-    }
-
-    [Test]
-    public void PartialFromOneParameterFunctionAndOneParameterAsExtMethod()
-    {
-      Func<int, string> toString = i => i.ToString();
-
-      var string123 = toString.Partial(123);
-
-      Assert.That(string123(), Is.EqualTo("123"));
-    }
-
-    [Test]
-    public void PartialFromTwoParameterFunctionAndOneParameterAsExtMethod()
-    {
-      Func<int, int, int> subtract = (a, b) => a - b;
-
-      var subtractFrom100 = subtract.Partial(100);
-
-      Assert.That(subtractFrom100(10), Is.EqualTo(90));
-    }
-
-    [Test]
-    public void PartialFromTwoParameterFunctionAndTwoParametersAsExtMethod()
-    {
-      Func<int, int, double> divide = (a, b) => (double)a / b;
-
-      var threeQuarters = divide.Partial(3, 4);
-
-      Assert.That(threeQuarters(), Is.EqualTo(0.75));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterFunctionAndOneParameterAsExtMethod()
-    {
-      Func<string, string, string, string> replace =
-        (oldValue, newValue, s) => s.Replace(oldValue, newValue);
-
-      var replaceAllBs = replace.Partial("b");
-
-      Assert.That(replaceAllBs("g", "wibble"), Is.EqualTo("wiggle"));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterFunctionAndTwoParametersAsExtMethod()
-    {
-      Func<int, int, int, double> expression = (a, b, c) => (a + b) / (double)c;
-
-      var divide150ByX = expression.Partial(100, 50);
-
-      Assert.That(divide150ByX(5), Is.EqualTo(30));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterFunctionAndThreeParametersAsExtMethod()
-    {
-      Func<char, char, char, string> concat = (a, b, c) => a.ToString() + b + c;
-
-      var oneTwoThree = concat.Partial('1', '2', '3');
-
-      Assert.That(oneTwoThree(), Is.EqualTo("123"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterFunctionAndOneParameterAsExtMethod()
-    {
-      Func<char, char, char, char, string> concat =
-        (a, b, c, d) => a.ToString() + b + c + d;
-
-      Func<char, char, char, string> concatToOne = concat.Partial('1');
-
-      Assert.That(concatToOne('2', '3', '4'), Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterFunctionAndTwoParametersAsExtMethod()
-    {
-      Func<char, char, char, char, string> concat =
-        (a, b, c, d) => a.ToString() + b + c + d;
-
-      Func<char, char, string> concatToOneTwo = concat.Partial('1', '2');
-
-      Assert.That(concatToOneTwo('3', '4'), Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterFunctionAndThreeParametersAsExtMethod()
-    {
-      Func<char, char, char, char, string> concat =
-        (a, b, c, d) => a.ToString() + b + c + d;
-
-      Func<char, string> concatToOneTwoThree =
-        concat.Partial('1', '2', '3');
-
-      Assert.That(concatToOneTwoThree('4'), Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterFunctionAndFourParametersAsExtMethod()
-    {
-      Func<char, char, char, char, string> concat =
-        (a, b, c, d) => a.ToString() + b + c + d;
-
-      Func<string> oneTwoThreeFour =
-        concat.Partial('1', '2', '3', '4');
-
-      Assert.That(oneTwoThreeFour(), Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterFunctionAndOneParameterAsExtMethod()
-    {
-      Func<char, char, char, char, char, string> concat =
-        (a, b, c, d, e) => a.ToString() + b + c + d + e;
-
-      Func<char, char, char, char, string> concatToOne =
-        concat.Partial('1');
-
-      Assert.That(concatToOne('2', '3', '4', '5'), Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterFunctionAndTwoParametersAsExtMethod()
-    {
-      Func<char, char, char, char, char, string> concat =
-        (a, b, c, d, e) => a.ToString() + b + c + d + e;
-
-      Func<char, char, char, string> concatToOneTwo =
-        concat.Partial('1', '2');
-
-      Assert.That(concatToOneTwo('3', '4', '5'), Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterFunctionAndThreeParametersAsExtMethod()
-    {
-      Func<char, char, char, char, char, string> concat =
-        (a, b, c, d, e) => a.ToString() + b + c + d + e;
-
-      Func<char, char, string> concatToOneTwoThree =
-        concat.Partial('1', '2', '3');
-
-      Assert.That(concatToOneTwoThree('4', '5'), Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterFunctionAndFourParametersAsExtMethod()
-    {
-      Func<char, char, char, char, char, string> concat =
-        (a, b, c, d, e) => a.ToString() + b + c + d + e;
-
-      Func<char, string> concatToOneTwoThreeFour =
-        concat.Partial('1', '2', '3', '4');
-
-      Assert.That(concatToOneTwoThreeFour('5'), Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterFunctionAndFiveParametersAsExtMethod()
-    {
-      Func<char, char, char, char, char, string> concat =
-        (a, b, c, d, e) => a.ToString() + b + c + d + e;
-
-      Func<string> oneTwoThreeFourFive =
-        concat.Partial('1', '2', '3', '4', '5');
-
-      Assert.That(oneTwoThreeFourFive(), Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void ConstructedPartialFunctionNotEvaluatedUntilCalledAsExtMethod()
-    {
-      Func<int[], int[]> times2 = numbers => numbers.Select(n => n * 2).ToArray();
-      var mutable = new[] { 1 };
-
-      Func<int[]> oneTimes2 = times2.Partial(mutable);
-      mutable[0] = 3;
-
-      Assert.That(oneTimes2(), Is.EqualTo(new[] { 6 }));
-    }
-
-    [Test]
-    public void PartialFromOneParameterActionAndOneParameterAsExtMethod()
-    {
-      int result = 0;
-      Action<int> initVar = x => result = x;
-
-      var initVarTo123 = initVar.Partial(123);
-
-      initVarTo123();
-      Assert.That(result, Is.EqualTo(123));
-    }
-
-    [Test]
-    public void PartialFromTwoParameterActionAndOneParameterAsExtMethod()
-    {
-      int result = 0;
-      Action<int, int> initToDiff = (a, b) => result = a - b;
-
-      var initSubtractingFrom100 = initToDiff.Partial(100);
-
-      initSubtractingFrom100(10);
-      Assert.That(result, Is.EqualTo(90));
-    }
-
-    [Test]
-    public void PartialFromTwoParameterActionAndTwoParametersAsExtMethod()
-    {
-      double result = 0;
-      Action<int, int> initToAdivB = (a, b) => result = (double)a / b;
-
-      var initToThreeQuarters = initToAdivB.Partial(3, 4);
-
-      initToThreeQuarters();
-      Assert.That(result, Is.EqualTo(0.75));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterActionAndOneParameterAsExtMethod()
-    {
-      string result = null;
-      Action<string, string, string> initWithReplace =
-        (oldValue, newValue, s) => result = s.Replace(oldValue, newValue);
-
-      var initWithReplaceAllBs = initWithReplace.Partial("b");
-
-      initWithReplaceAllBs("g", "wibble");
-      Assert.That(result, Is.EqualTo("wiggle"));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterActionAndTwoParametersAsExtMethod()
-    {
-      double result = 0;
-      Action<int, int, int> initFromExpression =
-        (a, b, c) => result = (a + b) / (double)c;
-
-      var initByDivide150ByX = initFromExpression.Partial(100, 50);
-
-      initByDivide150ByX(5);
-      Assert.That(result, Is.EqualTo(30));
-    }
-
-    [Test]
-    public void PartialFromThreeParameterActionAndThreeParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char> initFromConcat =
-        (a, b, c) => result = a.ToString() + b + c;
-
-      var initOneTwoThree = initFromConcat.Partial('1', '2', '3');
-
-      initOneTwoThree();
-      Assert.That(result, Is.EqualTo("123"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterActionAndOneParameterAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char> initFromConcat =
-        (a, b, c, d) => result = a.ToString() + b + c + d;
-
-      var initConcatToOne = initFromConcat.Partial('1');
-
-      initConcatToOne('2', '3', '4');
-      Assert.That(result, Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterActionAndTwoParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char> initFromConcat =
-        (a, b, c, d) => result = a.ToString() + b + c + d;
-
-      var initConcatToOneTwo = initFromConcat.Partial('1', '2');
-
-      initConcatToOneTwo('3', '4');
-      Assert.That(result, Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterActionAndThreeParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char> initFromConcat =
-        (a, b, c, d) => result = a.ToString() + b + c + d;
-
-      var initConcatToOneTwoThree = initFromConcat.Partial('1', '2', '3');
-
-      initConcatToOneTwoThree('4');
-      Assert.That(result, Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFourParameterActionAndFourParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char> initFromConcat =
-        (a, b, c, d) => result = a.ToString() + b + c + d;
-
-      var initToOneTwoThreeFour = initFromConcat.Partial('1', '2', '3', '4');
-
-      initToOneTwoThreeFour();
-      Assert.That(result, Is.EqualTo("1234"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterActionAndOneParameterAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char, char> initFromConcat =
-        (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
-
-      var initConcatToOne = initFromConcat.Partial('1');
-
-      initConcatToOne('2', '3', '4', '5');
-      Assert.That(result, Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterActionAndTwoParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char, char> initFromConcat =
-        (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
-
-      var initConcatToOneTwo = initFromConcat.Partial('1', '2');
-
-      initConcatToOneTwo('3', '4', '5');
-      Assert.That(result, Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterActionAndThreeParametersAsExtMethod()
-    {
-      string result = null;
-      Action<char, char, char, char, char> initFromConcat =
-        (a, b, c, d, e) => result = a.ToString() + b + c + d + e;
-
-      var initConcatToOneTwoThree = initFromConcat.Partial('1', '2', '3');
-
-      initConcatToOneTwoThree('4', '5');
-      Assert.That(result, Is.EqualTo("12345"));
-    }
-
-    [Test]
-    public void PartialFromFiveParameterActionAndFourParametersAsExtMethod()
     {
       string result = null;
       Action<char, char, char, char, char> initFromConcat =
@@ -795,7 +369,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void PartialFromFiveParameterActionAndFiveParametersAsExtMethod()
+    public void PartialFromFiveParameterActionAndFiveParameters()
     {
       string result = null;
       Action<char, char, char, char, char> initFromConcat =
@@ -809,7 +383,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void ConstructedPartialActionNotEvaluatedUntilCalledAsExtMethod()
+    public void ConstructedPartialActionNotEvaluatedUntilCalled()
     {
       int[] result = null;
       Action<int[]> initTimes2 =

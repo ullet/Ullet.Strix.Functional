@@ -48,7 +48,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           return new object();
         });
       Func<Func<object>, object> nestedHandler =
-        Fn.Nest(innerHandler, outerHandler);
+        innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handledBy, Is.EqualTo("InvalidOperationException"));
@@ -71,7 +71,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           return new object();
         });
       Func<Func<object>, object> nestedHandler =
-        Fn.Nest(outerHandler, innerHandler);
+        outerHandler.Nest(innerHandler);
 
       nestedHandler(() => { throw new InvalidOperationException(); });
 
@@ -135,7 +135,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           return Fn.Just(new object());
         });
       Func<Func<object>, object> nestedHandler =
-        Fn.Nest(innerHandler, outerHandler);
+        innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handled, Is.True);
@@ -159,7 +159,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
             return Fn.Just(new object());
           });
       Func<Func<object>, object> nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+        outerHandler.Nest(middleHandler.Nest(innerHandler));
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handled, Is.True);
@@ -190,8 +190,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           callCount++;
           return Fn.Just(new object());
         });
-      var nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+      var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
       nestedHandler(() => { throw new Exception(); });
 
@@ -223,8 +222,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           orderCalled.Add("outer");
           return Fn.Just(new object());
         });
-      var nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+      var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
       nestedHandler(() => { throw new Exception(); });
 
@@ -273,7 +271,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         Ex.Handler<InvalidOperationException, object>(ex => new object());
       var outerHandler =
         Ex.Handler<MissingMethodException, object>(ex => new object());
-      var handler = Fn.Nest(innerHandler, outerHandler);
+      var handler = innerHandler.Nest(outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {
@@ -293,7 +291,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
       var outerHandler =
         Ex.Handler<ArgumentException, object>(ex => Fn.Nothing<object>());
-      var handler = Fn.Nest(innerHandler, outerHandler);
+      var handler = innerHandler.Nest(outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {
@@ -349,13 +347,11 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ValueReturnedFromFirstHandlerThatCanHandleExceptionCapturing()
     {
-      var handler = Fn.Nest(
-        Ex.Handler<Exception, int>(ex => 4),
-        Fn.Nest(
-          Ex.Handler<ArgumentException, int>(ex => 3),
-          Fn.Nest(
-            Ex.Handler<ArgumentException, int>(ex => 2),
-            Ex.Handler<InvalidOperationException, int>(ex => 1))));
+      var handler =
+        Ex.Handler<Exception, int>(ex => 4)
+          .Nest(Ex.Handler<ArgumentException, int>(ex => 3)
+            .Nest(Ex.Handler<ArgumentException, int>(ex => 2)
+              .Nest(Ex.Handler<InvalidOperationException, int>(ex => 1))));
 
       var returned = handler(() => { throw new ArgumentException(); });
 
@@ -365,15 +361,14 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ValueReturnedFromFirstHandlerThatCanHandleExceptionConditional()
     {
-      var handler = Fn.Nest(
-        Ex.Handler<Exception, int>(ex => Fn.Just(4)),
-        Fn.Nest(
-          Ex.Handler<ArgumentException, int>(ex => Fn.Just(3)),
-          Fn.Nest(
-            Ex.Handler<ArgumentException, int>(ex => Fn.Just(2)),
-            Fn.Nest(
-              Ex.Handler<ArgumentException, int>(ex => Fn.Nothing<int>()),
-              Ex.Handler<InvalidOperationException, int>(ex => Fn.Just(1))))));
+      var handler =
+        Ex.Handler<Exception, int>(ex => Fn.Just(4))
+          .Nest(Ex.Handler<ArgumentException, int>(ex => Fn.Just(3))
+            .Nest(Ex.Handler<ArgumentException, int>(ex => Fn.Just(2))
+              .Nest(Ex.Handler<ArgumentException, int>(ex => Fn.Nothing<int>())
+                .Nest(
+                  Ex.Handler<InvalidOperationException, int>(
+                    ex => Fn.Just(1))))));
 
       var returned = handler(() => { throw new ArgumentException(); });
 

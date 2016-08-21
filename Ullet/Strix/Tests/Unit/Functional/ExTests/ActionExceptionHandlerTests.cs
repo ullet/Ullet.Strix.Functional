@@ -34,7 +34,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         ex => handledBy = "ArgumentException");
       Action<Action> outerHandler = Ex.Handler<InvalidOperationException>(
         ex => handledBy = "InvalidOperationException");
-      Action<Action> nestedHandler = Fn.Nest(innerHandler, outerHandler);
+      Action<Action> nestedHandler = innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handledBy, Is.EqualTo("InvalidOperationException"));
@@ -48,7 +48,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         = Ex.Handler<Exception>(ex => orderCalled.Add("Inner"));
       Action<Action> outerHandler
         = Ex.Handler<Exception>(ex => orderCalled.Add("Outer"));
-      Action<Action> nestedHandler = Fn.Nest(outerHandler, innerHandler);
+      Action<Action> nestedHandler = outerHandler.Nest(innerHandler);
 
       nestedHandler(() => { throw new InvalidOperationException(); });
 
@@ -103,7 +103,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           handled = true;
           return true;
         });
-      Action<Action> nestedHandler = Fn.Nest(innerHandler, outerHandler);
+      Action<Action> nestedHandler = innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handled, Is.True);
@@ -125,7 +125,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           return true;
         });
       Action<Action> nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+        outerHandler.Nest(middleHandler.Nest(innerHandler));
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handled, Is.True);
@@ -153,8 +153,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           callCount++;
           return true;
         });
-      var nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+      var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
       nestedHandler(() => { throw new Exception(); });
 
@@ -183,8 +182,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           orderCalled.Add("outer");
           return true;
         });
-      var nestedHandler =
-        Fn.Nest(outerHandler, Fn.Nest(middleHandler, innerHandler));
+      var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
       nestedHandler(() => { throw new Exception(); });
 
@@ -227,7 +225,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var innerHandler = Ex.Handler<InvalidOperationException>(ex => { });
       var outerHandler = Ex.Handler<MissingMethodException>(ex => { });
-      var handler = Fn.Nest(innerHandler, outerHandler);
+      var handler = innerHandler.Nest(outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {
@@ -244,7 +242,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var innerHandler = Ex.Handler<ArgumentException>(ex => false);
       var outerHandler = Ex.Handler<ArgumentException>(ex => false);
-      var handler = Fn.Nest(innerHandler, outerHandler);
+      var handler = innerHandler.Nest(outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {

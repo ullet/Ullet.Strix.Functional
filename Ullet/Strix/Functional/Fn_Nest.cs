@@ -26,7 +26,7 @@ namespace Ullet.Strix.Functional
     /// Particularly useful for nesting exception handler delegates.
     /// </remarks>
     public static Action<Action> Nest(
-      Action<Action> outerAction, Action<Action> innerAction)
+      this Action<Action> outerAction, Action<Action> innerAction)
     {
       return action => outerAction(() => innerAction(action));
     }
@@ -44,7 +44,7 @@ namespace Ullet.Strix.Functional
     /// </param>
     /// <returns>An <see cref="Action"/> delegate.</returns>
     public static Action Nest(
-      Action<Action> outerAction, Action innerAction)
+      this Action<Action> outerAction, Action innerAction)
     {
       return () => outerAction(innerAction);
     }
@@ -65,7 +65,7 @@ namespace Ullet.Strix.Functional
     /// Particularly useful for nesting exception handler delegates.
     /// </remarks>
     public static Func<Func<T>, T> Nest<T>(
-      Func<Func<T>, T> outerFunc, Func<Func<T>, T> innerFunc)
+      this Func<Func<T>, T> outerFunc, Func<Func<T>, T> innerFunc)
     {
       return fn => outerFunc(() => innerFunc(fn));
     }
@@ -82,7 +82,8 @@ namespace Ullet.Strix.Functional
     /// <paramref name="outerFunc"/>.
     /// </param>
     /// <returns>An <see cref="Func{T}"/> delegate.</returns>
-    public static Func<T> Nest<T>(Func<Func<T>, T> outerFunc, Func<T> innerFunc)
+    public static Func<T> Nest<T>(
+      this Func<Func<T>, T> outerFunc, Func<T> innerFunc)
     {
       return () => outerFunc(innerFunc);
     }

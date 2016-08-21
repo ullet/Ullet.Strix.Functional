@@ -24,7 +24,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         trace.Add("end-outer");
       };
 
-      Action<Action> nested = Fn.Nest(outerAction, innerAction);
+      Action<Action> nested = outerAction.Nest(innerAction);
 
       nested(() => trace.Add("action"));
       Assert.That(
@@ -54,7 +54,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         trace.Add("end-outer");
       };
 
-      Action nested = Fn.Nest(outerAction, innerAction);
+      Action nested = outerAction.Nest(innerAction);
 
       nested();
       Assert.That(
@@ -86,7 +86,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         return value;
       };
 
-      Func<Func<int>, int> nested = Fn.Nest(outerFunc, innerFunc);
+      Func<Func<int>, int> nested = outerFunc.Nest(innerFunc);
 
       var returnValue = nested(() =>
       {
@@ -123,7 +123,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         return value;
       };
 
-      Func<int> nested = Fn.Nest(outerFunc, innerFunc);
+      Func<int> nested = outerFunc.Nest(innerFunc);
 
       var returnValue = nested();
       Assert.That(
