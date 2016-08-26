@@ -8,6 +8,8 @@ using System;
 
 namespace Ullet.Strix.Functional
 {
+  using System.Collections.Generic;
+
   public static partial class Fn
   {
     /// <summary>
@@ -22,9 +24,25 @@ namespace Ullet.Strix.Functional
     /// <paramref name="outerAction"/>.
     /// </param>
     /// <returns>An <![CDATA[Action<Action>]]> delegate.</returns>
-    /// <remarks>
-    /// Particularly useful for nesting exception handler delegates.
-    /// </remarks>
+    /// <example>
+    /// <![CDATA[
+    /// var log = new List<string>();
+    /// Action<Action> logBefore = a =>
+    /// {
+    ///   log.Add("Before");
+    ///   a();
+    /// };
+    /// Action<Action> logAfter = a =>
+    /// {
+    ///   a();
+    ///   log.Add("After");
+    /// };
+    /// Action action = () => log.Add("During");
+    /// var logBeforeAndAfter = logAfter.Nest(logBefore);
+    /// var loggedAction = logBeforeAndAfter.Nest(action);
+    /// loggedAction(); // log -> ["Before", "During", "After"]
+    /// ]]>
+    /// </example>
     public static Action<Action> Nest(
       this Action<Action> outerAction, Action<Action> innerAction)
     {
@@ -60,10 +78,7 @@ namespace Ullet.Strix.Functional
     /// The inner <![CDATA[Func<Func<T>, T>]]> to nest inside
     /// <paramref name="outerFunc"/>.
     /// </param>
-    /// <returns>An <![CDATA[Func<Func<T>, T>]]> delegate.</returns>
-    /// <remarks>
-    /// Particularly useful for nesting exception handler delegates.
-    /// </remarks>
+    /// <returns>A <![CDATA[Func<Func<T>, T>]]> delegate.</returns>
     public static Func<Func<TA>, TC> Nest<TA, TB, TC>(
       this Func<Func<TB>, TC> outerFunc, Func<Func<TA>, TB> innerFunc)
     {
@@ -81,7 +96,7 @@ namespace Ullet.Strix.Functional
     /// The inner <see cref="Func{T}"/> to nest inside
     /// <paramref name="outerFunc"/>.
     /// </param>
-    /// <returns>An <see cref="Func{T}"/> delegate.</returns>
+    /// <returns>A <see cref="Func{T}"/> delegate.</returns>
     public static Func<TB> Nest<TA, TB>(
       this Func<Func<TA>, TB> outerFunc, Func<TA> innerFunc)
     {
