@@ -1,14 +1,14 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System.Collections;
-using System.Collections.Generic;
-
 namespace Ullet.Strix.Functional
 {
+  using System.Collections;
+  using System.Collections.Generic;
+
   /// <summary>
   /// Dictionary of keys and values returning <see cref="T:Maybe{TValue}"/> from
   /// indexer instead of simply a <typeparamref name="TValue"/>.

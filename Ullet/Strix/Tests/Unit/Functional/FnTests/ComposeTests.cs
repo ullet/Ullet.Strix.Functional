@@ -4,12 +4,12 @@
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Linq;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 {
+  using System;
+  using System.Linq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class ComposeTests
   {
@@ -167,7 +167,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Func<int, double> squareRoot = x => Math.Sqrt(x);
       Action<double> setResult = x => result = x;
 
-      Action<int> setResultToSquare = setResult.Compose(squareRoot);
+      var setResultToSquare = setResult.Compose(squareRoot);
 
       setResultToSquare(12);
       Assert.That(result, Is.EqualTo(3.464D).Within(0.0005D));

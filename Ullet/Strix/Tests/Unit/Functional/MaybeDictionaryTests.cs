@@ -1,14 +1,14 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System.Collections.Generic;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit
 {
+  using System.Collections.Generic;
+  using NUnit.Framework;
+
   [TestFixture]
   public class MaybeDictionaryTests
   {

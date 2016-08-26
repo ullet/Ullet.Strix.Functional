@@ -46,6 +46,8 @@
     <Compile Include="Fn_Flip.cs" />
     <Compile Include="Fn_Nest.cs" />
     <Compile Include="Fn_Partial.cs" />
+    <Compile Include="Fn_ToAction.cs" />
+    <Compile Include="Fn_ToFunc.cs" />
     <Compile Include="Just.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="MaybeDictionary.cs" />

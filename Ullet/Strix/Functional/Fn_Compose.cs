@@ -4,12 +4,12 @@
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Ullet.Strix.Functional
 {
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+
   public static partial class Fn
   {
     /// <summary>
@@ -154,10 +154,10 @@ namespace Ullet.Strix.Functional
     /// <summary>
     /// Compose outer action with unary inner function.
     /// </summary>
-    public static Action<TA> Compose<TA, TB>(
+    public static Func<TA, Unit> Compose<TA, TB>(
       this Action<TB> outer, Func<TA, TB> inner)
     {
-      return a => outer(inner(a));
+      return outer.ToFunc().Compose(inner);
     }
 
     /// <summary>

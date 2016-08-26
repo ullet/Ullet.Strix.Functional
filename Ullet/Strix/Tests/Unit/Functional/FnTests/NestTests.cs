@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-
-namespace Ullet.Strix.Functional.Tests.Unit.FnTests
+﻿namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 {
+  using System;
+  using System.Collections.Generic;
+  using NUnit.Framework;
+
   [TestFixture]
   public class NestTests
   {
@@ -24,9 +24,9 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         trace.Add("end-outer");
       };
 
-      Action<Action> nested = outerAction.Nest(innerAction);
+      var nested = outerAction.Nest(innerAction);
 
-      nested(() => trace.Add("action"));
+      nested(Fn.ToFunc(()=> trace.Add("action")));
       Assert.That(
         trace,
         Is.EqualTo(new List<string>
@@ -54,7 +54,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         trace.Add("end-outer");
       };
 
-      Action nested = outerAction.Nest(innerAction);
+      var nested = outerAction.Nest(innerAction);
 
       nested();
       Assert.That(

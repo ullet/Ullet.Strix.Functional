@@ -1,13 +1,13 @@
 /*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-
 namespace Ullet.Strix.Functional
 {
+  using System;
+
   /// <summary>
   /// Functional exception handling.
   /// </summary>
@@ -93,17 +93,11 @@ namespace Ullet.Strix.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> Handler<TEx>(
+    public static Func<Func<Unit>, Unit> Handler<TEx>(
       Action<TEx> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
-      return Handler<TEx>(
-        action =>
-        {
-          handleException(action);
-          return true;
-        },
-        finallyBlock);
+      return Handler(handleException.ToFunc(), finallyBlock);
     }
 
     /// <summary>
@@ -173,7 +167,7 @@ namespace Ullet.Strix.Functional
     ///  */
     /// ]]>
     /// </example>
-    public static Action<Action> Handler<TEx>(
+    public static Func<Func<Unit>, Unit> Handler<TEx>(
       Func<TEx, bool> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
@@ -182,17 +176,18 @@ namespace Ullet.Strix.Functional
        * delegate to Handler<TEx, TReturn>.
        */
 
-      return action =>
+      return f =>
       {
         try
         {
-          action();
+          return f();
         }
         catch (Exception ex)
         {
           var tex = ex as TEx;
           if (tex == null || !handleException(tex))
             throw;
+          return Fn.Unit;
         }
         finally
         {

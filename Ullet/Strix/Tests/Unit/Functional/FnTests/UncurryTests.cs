@@ -1,15 +1,15 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Linq;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 {
+  using System;
+  using System.Linq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class UncurryTests
   {
@@ -70,74 +70,6 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 
       Assert.That(uncurried("pontificate", 0, "cattle", 0, 3),
         Is.EqualTo(curried("pontificate")(0)("cattle")(0)(3)));
-    }
-
-    [Test]
-    public void UncurriedFormOfUnaryActionIsItself()
-    {
-      int result = 0;
-      Action<int> curried = a => result = a + 1;
-
-      Action<int> uncurried = curried.Uncurry();
-
-      var input = new Random().Next();
-      curried(input);
-      var resultViaCurried = result;
-      uncurried(input);
-      var resultViaUncurried = result;
-      Assert.That(resultViaUncurried, Is.EqualTo(resultViaCurried));
-    }
-
-    [Test]
-    public void CanUncurryToTwoParameterAction()
-    {
-      string result = null;
-      Func<char, Action<int>> curried =
-        c => count => result = new string(c, count);
-
-      Action<char, int> uncurried = curried.Uncurry();
-
-      uncurried('X', 4);
-      Assert.That(result, Is.EqualTo("XXXX"));
-    }
-
-    [Test]
-    public void CanUncurryToThreeParameterAction()
-    {
-      double result = 0;
-      Func<int, Func<long, Action<float>>> curried =
-        i => l => f => result = ((double)(i + l)) / f;
-
-      Action<int, long, float> uncurried = curried.Uncurry();
-
-      uncurried(10, 4L, 2.0f);
-      Assert.That(result, Is.EqualTo(7.0D));
-    }
-
-    [Test]
-    public void CanUncurryToFourParameterAction()
-    {
-      string result = null;
-      Func<string, Func<string[], Func<int, Action<int>>>> curried =
-        s => v => i => c => result = string.Join(s, v, i, c);
-
-      Action<string, string[], int, int> uncurried = curried.Uncurry();
-
-      uncurried("-", new[] {"a", "b", "c", "d"}, 1, 2);
-      Assert.That(result, Is.EqualTo("b-c"));
-    }
-
-    [Test]
-    public void CanUncurryToFiveParameterAction()
-    {
-      int result = 0;
-      Func<string, Func<int, Func<string, Func<int, Action<int>>>>> curried =
-        s1 => i1 => s2 => i2 => l => result = string.Compare(s1, i1, s2, i2, l);
-
-      Action<string, int, string, int, int> uncurried = curried.Uncurry();
-
-      uncurried("pontificate", 0, "cattle", 0, 3);
-      Assert.That(result, Is.EqualTo(1));
     }
 
     private static int[] RandomValues(int count)

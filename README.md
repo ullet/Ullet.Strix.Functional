@@ -1,6 +1,8 @@
 # Ullet.Strix.Functional - Some C# Functional Code
 
-A collection of C# functions, extension methods, and such, that might just be useful for working in a more functional style.
+A collection of C# functions, extension methods, and such.  
+Mostly this is just my experiments with functional ideas in C#, but this code might conceivably be useful to someone else.  
+If you are looking for a stable full-featured C# functional library then you're in the wrong place.
 
 * * *
 

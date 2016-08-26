@@ -1,15 +1,15 @@
 /*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Linq;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 {
+  using System;
+  using System.Linq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class CurryTests
   {
@@ -79,7 +79,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       int result = 0;
       Action<int> uncurried = a => result = a + 1;
 
-      Action<int> curried = uncurried.Curry();
+      var curried = uncurried.Curry();
 
       var input = new Random().Next();
       uncurried(input);
@@ -95,7 +95,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       string result = null;
       Action<char, int> uncurried = (c, count) => result =new string(c, count);
 
-      Func<char, Action<int>> curried = uncurried.Curry();
+      var curried = uncurried.Curry();
 
       curried('X')(4);
       Assert.That(result, Is.EqualTo("XXXX"));
@@ -108,7 +108,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
       Action<int, long, float> uncurried =
         (i, l, f) => result = ((double)(i + l)) / f;
 
-      Func<int, Func<long, Action<float>>> curried = uncurried.Curry();
+      var curried = uncurried.Curry();
 
       curried(10)(4L)(2.0f);
       Assert.That(result, Is.EqualTo(7.0D));
@@ -122,8 +122,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         (separator, values, startIndex, count) =>
           result = string.Join(separator, values, startIndex, count);
 
-      Func<string, Func<string[], Func<int, Action<int>>>> curried =
-        uncurried.Curry();
+      var curried = uncurried.Curry();
 
       curried("-")(new[] {"a", "b", "c", "d"})(1)(2);
       Assert.That(result, Is.EqualTo("b-c"));
@@ -137,8 +136,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         (strA, indexA, strB, indexB, length) =>
           result = string.Compare(strA, indexA, strB, indexB, length);
 
-      Func<string, Func<int, Func<string, Func<int, Action<int>>>>>
-        curried = uncurried.Curry();
+      var curried = uncurried.Curry();
 
       curried("pontificate")(0)("cattle")(0)(3);
       Assert.That(result, Is.EqualTo(1));

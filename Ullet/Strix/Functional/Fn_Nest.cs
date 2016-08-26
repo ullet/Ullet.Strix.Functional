@@ -4,11 +4,9 @@
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-
 namespace Ullet.Strix.Functional
 {
-  using System.Collections.Generic;
+  using System;
 
   public static partial class Fn
   {
@@ -39,14 +37,18 @@ namespace Ullet.Strix.Functional
     /// };
     /// Action action = () => log.Add("During");
     /// var logBeforeAndAfter = logAfter.Nest(logBefore);
-    /// var loggedAction = logBeforeAndAfter.Nest(action);
+    /// var loggedAction = logBeforeAndAfter.Nest(action.ToFunc());
     /// loggedAction(); // log -> ["Before", "During", "After"]
     /// ]]>
     /// </example>
-    public static Action<Action> Nest(
+    public static Func<Func<Unit>, Unit> Nest(
       this Action<Action> outerAction, Action<Action> innerAction)
     {
-      return action => outerAction(() => innerAction(action));
+      Func<Func<Unit>, Unit> outerFunc =
+        f => outerAction.ToFunc()(f.ToAction());
+      Func<Func<Unit>, Unit> innerFunc =
+        f => innerAction.ToFunc()(f.ToAction());
+      return outerFunc.Nest(innerFunc);
     }
 
     /// <summary>
@@ -61,10 +63,12 @@ namespace Ullet.Strix.Functional
     /// <paramref name="outerAction"/>.
     /// </param>
     /// <returns>An <see cref="Action"/> delegate.</returns>
-    public static Action Nest(
+    public static Func<Unit> Nest(
       this Action<Action> outerAction, Action innerAction)
     {
-      return () => outerAction(innerAction);
+      Func<Func<Unit>, Unit> outerFunc =
+        f => outerAction.ToFunc()(f.ToAction());
+      return outerFunc.Nest(innerAction.ToFunc());
     }
 
     /// <summary>

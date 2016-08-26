@@ -1,13 +1,13 @@
 /*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-
 namespace Ullet.Strix.Functional
 {
+  using System;
+
   /// <summary>
   /// A "no value" data type. Nothing and <see cref="Just{T}"/> are
   /// components of the <see cref="Maybe{T}"/> optional type.

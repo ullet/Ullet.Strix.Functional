@@ -1,15 +1,15 @@
 /*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Linq;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit.FnTests
 {
+  using System;
+  using System.Linq;
+  using NUnit.Framework;
+
   [TestFixture]
   public class PartialTests
   {
@@ -390,7 +390,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         numbers => result = numbers.Select(n => n * 2).ToArray();
       var mutable = new[] { 1 };
 
-      Action initOneTimes2 = initTimes2.Partial(mutable);
+      var initOneTimes2 = initTimes2.Partial(mutable);
       mutable[0] = 3;
 
       initOneTimes2();

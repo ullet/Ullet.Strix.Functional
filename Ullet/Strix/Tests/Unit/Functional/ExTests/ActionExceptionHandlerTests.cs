@@ -1,15 +1,15 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
 
-using System;
-using System.Collections.Generic;
-using NUnit.Framework;
-
 namespace Ullet.Strix.Functional.Tests.Unit.ExTests
 {
+  using System;
+  using System.Collections.Generic;
+  using NUnit.Framework;
+
   [TestFixture]
   public class ActionExceptionHandlerTests
   {
@@ -18,8 +18,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var handledIt = false;
 
-      Action<Action> handler
-        = Ex.Handler<ArgumentException>(ex => handledIt = true);
+      var handler = Ex.Handler<ArgumentException>(ex => handledIt = true);
       handler(() => { throw new ArgumentException(); });
 
       Assert.That(handledIt, Is.True);
@@ -30,11 +29,11 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       string handledBy = null;
 
-      Action<Action> innerHandler = Ex.Handler<ArgumentException>(
+      var innerHandler = Ex.Handler<ArgumentException>(
         ex => handledBy = "ArgumentException");
-      Action<Action> outerHandler = Ex.Handler<InvalidOperationException>(
+      var outerHandler = Ex.Handler<InvalidOperationException>(
         ex => handledBy = "InvalidOperationException");
-      Action<Action> nestedHandler = innerHandler.Nest(outerHandler);
+      var nestedHandler = innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handledBy, Is.EqualTo("InvalidOperationException"));
@@ -44,11 +43,11 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void OuterActionHandlerNotCalledIfAlreadyHandled()
     {
       var orderCalled = new List<string>();
-      Action<Action> innerHandler
+      var innerHandler
         = Ex.Handler<Exception>(ex => orderCalled.Add("Inner"));
-      Action<Action> outerHandler
+      var outerHandler
         = Ex.Handler<Exception>(ex => orderCalled.Add("Outer"));
-      Action<Action> nestedHandler = outerHandler.Nest(innerHandler);
+      var nestedHandler = outerHandler.Nest(innerHandler);
 
       nestedHandler(() => { throw new InvalidOperationException(); });
 
@@ -58,7 +57,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void CanConstructActionHandlerFromDelegateFunction()
     {
-      Action<Action> handler = Ex.Handler<ArgumentException>(ex => false);
+      var handler = Ex.Handler<ArgumentException>(ex => false);
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -66,7 +65,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ActionHandlerThrowsExceptionIfDelegateFunctionReturnsFalse()
     {
-      Action<Action> handler = Ex.Handler<ArgumentException>(ex => false);
+      var handler = Ex.Handler<ArgumentException>(ex => false);
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -74,7 +73,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ActionHandlerNotThrowExceptionIfDelegateFunctionReturnsTrue()
     {
-      Action<Action> handler = Ex.Handler<ArgumentException>(ex => true);
+      var handler = Ex.Handler<ArgumentException>(ex => true);
       Assert.DoesNotThrow(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -83,7 +82,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ExceptionThrownIfNotHandledByAnyActionHandler()
     {
       var handled = false;
-      Action<Action> handler
+      var handler
         = Ex.Handler<ArgumentException>(ex => handled = true);
       Assert.Throws<InvalidOperationException>(
         () => handler(() => { throw new InvalidOperationException(); }));
@@ -95,15 +94,15 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var handled = false;
 
-      Action<Action> innerHandler
+      var innerHandler
         = Ex.Handler<ArgumentException>(ex => false);
-      Action<Action> outerHandler = Ex.Handler<InvalidOperationException>(
+      var outerHandler = Ex.Handler<InvalidOperationException>(
         ex =>
         {
           handled = true;
           return true;
         });
-      Action<Action> nestedHandler = innerHandler.Nest(outerHandler);
+      var nestedHandler = innerHandler.Nest(outerHandler);
       nestedHandler(() => { throw new InvalidOperationException(); });
 
       Assert.That(handled, Is.True);
@@ -114,17 +113,17 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var handled = false;
 
-      Action<Action> innerHandler
+      var innerHandler
         = Ex.Handler<ArgumentNullException>(ex => false);
-      Action<Action> middleHandler
+      var middleHandler
         = Ex.Handler<ArgumentException>(ex => { });
-      Action<Action> outerHandler = Ex.Handler<InvalidOperationException>(
+      var outerHandler = Ex.Handler<InvalidOperationException>(
         ex =>
         {
           handled = true;
           return true;
         });
-      Action<Action> nestedHandler =
+      var nestedHandler =
         outerHandler.Nest(middleHandler.Nest(innerHandler));
       nestedHandler(() => { throw new InvalidOperationException(); });
 
@@ -135,19 +134,19 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void AllMatchingActionHandlersCalledUntilHandled()
     {
       var callCount = 0;
-      Action<Action> innerHandler = Ex.Handler<Exception>(
+      var innerHandler = Ex.Handler<Exception>(
         ex =>
         {
           callCount++;
           return false;
         });
-      Action<Action> middleHandler = Ex.Handler<Exception>(
+      var middleHandler = Ex.Handler<Exception>(
         ex =>
         {
           callCount++;
           return false;
         });
-      Action<Action> outerHandler = Ex.Handler<Exception>(
+      var outerHandler = Ex.Handler<Exception>(
         ex =>
         {
           callCount++;
@@ -164,19 +163,19 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ActionHandlersCalledInOrderFromInnerToOuter()
     {
       var orderCalled = new List<string>();
-      Action<Action> innerHandler = Ex.Handler<Exception>(
+      var innerHandler = Ex.Handler<Exception>(
         ex =>
         {
           orderCalled.Add("inner");
           return false;
         });
-      Action<Action> middleHandler = Ex.Handler<Exception>(
+      var middleHandler = Ex.Handler<Exception>(
           ex =>
           {
             orderCalled.Add("middle");
             return false;
           });
-      Action<Action> outerHandler = Ex.Handler<Exception>(
+      var outerHandler = Ex.Handler<Exception>(
         ex =>
         {
           orderCalled.Add("outer");
@@ -199,6 +198,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           {
             // Call method so that get an easily matchable name in stack trace
             ThrowArgumentException("Error", new InvalidOperationException());
+            return Fn.Unit;
           }));
 
       Assert.That(
@@ -214,6 +214,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         {
           // Call method so that get an easily matchable name in stack trace
           ThrowArgumentException("Error", new InvalidOperationException());
+          return Fn.Unit;
         }));
 
       Assert.That(
@@ -231,6 +232,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         {
           // Call method so that get an easily matchable name in stack trace
           ThrowArgumentException("Error", new InvalidOperationException());
+          return Fn.Unit;
         }));
 
       Assert.That(
@@ -248,6 +250,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         {
           // Call method so that get an easily matchable name in stack trace
           ThrowArgumentException("Error", new InvalidOperationException());
+          return Fn.Unit;
         }));
 
       Assert.That(
@@ -261,7 +264,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
       var handler = Ex.Handler<Exception>(
         ex => { }, () => finallyWasCalled = true);
 
-      handler(() => { });
+      handler(() => Fn.Unit);
 
       Assert.That(finallyWasCalled, Is.True);
     }
@@ -273,7 +276,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
       var handler = Ex.Handler<Exception>(
         ex => false, () => finallyWasCalled = true);
 
-      handler(() => { });
+      handler(() => Fn.Unit);
 
       Assert.That(finallyWasCalled, Is.True);
     }
