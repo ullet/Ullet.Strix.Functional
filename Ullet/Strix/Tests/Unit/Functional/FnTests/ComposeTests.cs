@@ -1,5 +1,5 @@
 /*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
@@ -14,7 +14,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
   public class ComposeTests
   {
     [Test]
-    public void ComposeTwoFunctions()
+    public void ComposeTwoUnaryFunctionsLeftAfterRight()
     {
       Func<int, int> square = x => x*x;
       Func<int[], int> sum = a => a.Sum();
@@ -25,7 +25,18 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void ComposeTwoFunctionsRightAfterLeft()
+    public void ComposeUnaryFunctionWithNonaryFunctionLeftAfterRight()
+    {
+      Func<int, double> squareRoot = x => Math.Sqrt(x);
+      Func<int> nine = () => 9;
+
+      Func<double> squareRootOfNine = squareRoot.Compose(nine);
+
+      Assert.That(squareRootOfNine(), Is.EqualTo(3.0));
+    }
+
+    [Test]
+    public void ComposeTwoUnaryFunctionsRightAfterLeft()
     {
       Func<int, int> square = x => x * x;
       Func<int[], int> sum = a => a.Sum();
@@ -36,18 +47,43 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void AfterIsAliasForCompose()
+    public void ComposeUnaryFunctionWithNonaryFunctionRightAfterLeft()
     {
-      Func<int, int> square = x => x * x;
-      Func<int[], int> sum = a => a.Sum();
+      Func<int, double> squareRoot = x => Math.Sqrt(x);
+      Func<int> nine = () => 9;
 
-      Func<int[], int> squareOfSum = square.After(sum);
+      Func<double> squareRootOfNine = nine.ComposeReverse(squareRoot);
 
-      Assert.That(squareOfSum(new[] { 1, 2, 3, 4 }), Is.EqualTo(100));
+      Assert.That(squareRootOfNine(), Is.EqualTo(3.0));
     }
 
     [Test]
-    public void BeforeIsAliasForComposeReverse()
+    public void AfterWithUnaryFunctionsIsAliasForCompose()
+    {
+      Func<int, int> square = x => x * x;
+      Func<int[], int> sum = a => a.Sum();
+      var squareOfSumE = square.Compose(sum);
+      var input = new[] {1, 2, 3, 4};
+
+      var squareOfSumA = square.After(sum);
+
+      Assert.That(squareOfSumA(input), Is.EqualTo(squareOfSumE(input)));
+    }
+
+    [Test]
+    public void AfterWithUnaryAndNonaryFunctionsIsAliasForCompose()
+    {
+      Func<int, double> squareRoot = x => Math.Sqrt(x);
+      Func<int> nine = () => 9;
+      var squareRootOfNineE = nine.ComposeReverse(squareRoot);
+
+      var squareRootOfNineA = squareRoot.After(nine);
+
+      Assert.That(squareRootOfNineA(), Is.EqualTo(squareRootOfNineE()));
+    }
+
+    [Test]
+    public void BeforeWithUnarayFunctionsIsAliasForComposeReverse()
     {
       Func<int, int> square = x => x * x;
       Func<int[], int> sum = a => a.Sum();
@@ -58,7 +94,19 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void ComposeMultipleFunctions()
+    public void BeforeWithUnaryAndNonaryFunctionsIsAliasForComposeReverse()
+    {
+      Func<int, double> squareRoot = x => Math.Sqrt(x);
+      Func<int> nine = () => 9;
+      var squareRootOfNineE = nine.ComposeReverse(squareRoot);
+
+      var squareRootOfNineA = nine.Before(squareRoot);
+
+      Assert.That(squareRootOfNineA(), Is.EqualTo(squareRootOfNineE()));
+    }
+
+    [Test]
+    public void ComposeMultipleUnaryFunctions()
     {
       Func<int, int> add1 = x => x + 1;
       Func<int, int> times2 = x => x*2;

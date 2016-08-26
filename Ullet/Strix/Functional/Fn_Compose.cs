@@ -1,5 +1,5 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
@@ -13,45 +13,87 @@ namespace Ullet.Strix.Functional
   public static partial class Fn
   {
     /// <summary>
-    /// Compose <paramref name="outer"/> function with
-    /// <paramref name="inner"/> function.
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> unary function.
     /// </summary>
     /// <remarks>Alias for Compose.</remarks>
-    public static Func<T, TOut2> After<T, TOut1, TOut2>(
-      this Func<TOut1, TOut2> outer, Func<T, TOut1> inner)
+    public static Func<TA, TC> After<TA, TB, TC>(
+      this Func<TB, TC> outer, Func<TA, TB> inner)
     {
       return Compose(outer, inner);
     }
 
     /// <summary>
-    /// Compose <paramref name="outer"/> function with
-    /// <paramref name="inner"/> function.
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> nonary function.
     /// </summary>
-    public static Func<T, TOut2> Compose<T, TOut1, TOut2>(
-      this Func<TOut1, TOut2> outer, Func<T, TOut1> inner)
+    /// <remarks>Alias for Compose.</remarks>
+    public static Func<TB> After<TA, TB>(
+      this Func<TA, TB> outer, Func<TA> inner)
     {
-      return t => outer(inner(t));
+      return Compose(outer, inner);
     }
 
     /// <summary>
-    /// Compose <paramref name="outer"/> function with
-    /// <paramref name="inner"/> function.
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> unary function.
+    /// </summary>
+    public static Func<TA, TC> Compose<TA, TB, TC>(
+      this Func<TB, TC> outer, Func<TA, TB> inner)
+    {
+      return a => outer(inner(a));
+    }
+
+    /// <summary>
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> nonary function.
+    /// </summary>
+    public static Func<TB> Compose<TA, TB>(
+      this Func<TA, TB> outer, Func<TA> inner)
+    {
+      return () => outer(inner());
+    }
+
+    /// <summary>
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> unary function.
     /// </summary>
     /// <remarks>Alias for ComposeReverse.</remarks>
-    public static Func<T, TOut2> Before<T, TOut1, TOut2>(
-      this Func<T, TOut1> inner, Func<TOut1, TOut2> outer)
+    public static Func<TA, TC> Before<TA, TB, TC>(
+      this Func<TA, TB> inner, Func<TB, TC> outer)
     {
       return ComposeReverse(inner, outer);
     }
 
     /// <summary>
-    /// Compose <paramref name="outer"/> function with
-    /// <paramref name="inner"/> function.
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> nonary function.
     /// </summary>
-    public static Func<T, TOut2> ComposeReverse<T, TOut1, TOut2>(
-      this Func<T, TOut1> inner, Func<TOut1, TOut2> outer)
+    /// <remarks>Alias for ComposeReverse.</remarks>
+    public static Func<TB> Before<TA, TB>(
+      this Func<TA> inner, Func<TA, TB> outer)
     {
-      return t => outer(inner(t));
+      return ComposeReverse(inner, outer);
+    }
+
+    /// <summary>
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> unary function.
+    /// </summary>
+    public static Func<TA, TC> ComposeReverse<TA, TB, TC>(
+      this Func<TA, TB> inner, Func<TB, TC> outer)
+    {
+      return outer.Compose(inner);
+    }
+
+    /// <summary>
+    /// Compose <paramref name="outer"/> unary function with
+    /// <paramref name="inner"/> nonary function.
+    /// </summary>
+    public static Func<TB> ComposeReverse<TA, TB>(
+      this Func<TA> inner, Func<TA, TB> outer)
+    {
+      return outer.Compose(inner);
     }
 
     /// <summary>
@@ -94,28 +136,28 @@ namespace Ullet.Strix.Functional
     /// <summary>
     /// Compose unary outer function with binary inner function.
     /// </summary>
-    public static Func<T1, T2, T4> Compose<T1, T2, T3, T4>(
-      this Func<T3, T4> outer, Func<T1, T2, T3> inner)
+    public static Func<TA, TB, TD> Compose<TA, TB, TC, TD>(
+      this Func<TC, TD> outer, Func<TA, TB, TC> inner)
     {
-      return (t1, t2) => outer(inner(t1, t2));
+      return (a, b) => outer(inner(a, b));
     }
 
     /// <summary>
     /// Compose unary outer function with ternary inner function.
     /// </summary>
-    public static Func<T1, T2, T3, T5> Compose<T1, T2, T3, T4, T5>(
-      this Func<T4, T5> outer, Func<T1, T2, T3, T4> inner)
+    public static Func<TA, TB, TC, TE> Compose<TA, TB, TC, TD, TE>(
+      this Func<TD, TE> outer, Func<TA, TB, TC, TD> inner)
     {
-      return (t1, t2, t3) => outer(inner(t1, t2, t3));
+      return (a, b, c) => outer(inner(a, b, c));
     }
 
     /// <summary>
     /// Compose outer action with unary inner function.
     /// </summary>
-    public static Action<T1> Compose<T1, T2>(
-      this Action<T2> outer, Func<T1, T2> inner)
+    public static Action<TA> Compose<TA, TB>(
+      this Action<TB> outer, Func<TA, TB> inner)
     {
-      return t1 => outer(inner(t1));
+      return a => outer(inner(a));
     }
 
     /// <summary>
@@ -123,11 +165,11 @@ namespace Ullet.Strix.Functional
     /// <paramref name="g"/> with its input function.
     /// </summary>
     /// <returns>
-    /// Function that transforms function T3->T1 to new function T3->T2 as
-    /// result of applying function <paramref name="g"/> T1->T2.
+    /// Function that transforms function TC->TA to new function TC->TB as
+    /// result of applying function <paramref name="g"/> TA->TB.
     /// </returns>
-    public static Func<Func<T3, T1>, Func<T3, T2>> Result<T1, T2, T3>(
-      Func<T1, T2> g)
+    public static Func<Func<TC, TA>, Func<TC, TB>> Result<TA, TB, TC>(
+      Func<TA, TB> g)
     {
       return f => x => g(f(x));
     }
