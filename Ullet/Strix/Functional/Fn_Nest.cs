@@ -1,5 +1,5 @@
 ﻿/*
- * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015
+ * Written by Trevor Barnett, <mr.ullet@gmail.com>, 2015, 2016
  * Released to the Public Domain.  See http://unlicense.org/ or the
  * UNLICENSE file accompanying this source code.
  */
@@ -64,8 +64,8 @@ namespace Ullet.Strix.Functional
     /// <remarks>
     /// Particularly useful for nesting exception handler delegates.
     /// </remarks>
-    public static Func<Func<T>, T> Nest<T>(
-      this Func<Func<T>, T> outerFunc, Func<Func<T>, T> innerFunc)
+    public static Func<Func<TA>, TC> Nest<TA, TB, TC>(
+      this Func<Func<TB>, TC> outerFunc, Func<Func<TA>, TB> innerFunc)
     {
       return fn => outerFunc(() => innerFunc(fn));
     }
@@ -82,8 +82,8 @@ namespace Ullet.Strix.Functional
     /// <paramref name="outerFunc"/>.
     /// </param>
     /// <returns>An <see cref="Func{T}"/> delegate.</returns>
-    public static Func<T> Nest<T>(
-      this Func<Func<T>, T> outerFunc, Func<T> innerFunc)
+    public static Func<TB> Nest<TA, TB>(
+      this Func<Func<TA>, TB> outerFunc, Func<TA> innerFunc)
     {
       return () => outerFunc(innerFunc);
     }

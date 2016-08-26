@@ -71,22 +71,22 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     public void NestFuncOfFuncInsideFuncOfFunc()
     {
       var trace = new List<string>();
-      Func<Func<int>, int> innerFunc = func =>
+      Func<Func<int>, double> innerFunc = func =>
       {
         trace.Add("start-inner");
         var value = func();
         trace.Add("end-inner");
         return value;
       };
-      Func<Func<int>, int> outerFunc = func =>
+      Func<Func<double>, long> outerFunc = func =>
       {
         trace.Add("start-outer");
         var value = func();
         trace.Add("end-outer");
-        return value;
+        return (long)Math.Floor(value);
       };
 
-      Func<Func<int>, int> nested = outerFunc.Nest(innerFunc);
+      Func<Func<int>, long> nested = outerFunc.Nest(innerFunc);
 
       var returnValue = nested(() =>
       {
@@ -103,7 +103,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
           "end-inner",
           "end-outer"
         }));
-      Assert.That(returnValue, Is.EqualTo(42));
+      Assert.That(returnValue, Is.EqualTo(42L));
     }
 
     [Test]
@@ -115,7 +115,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         trace.Add("inner");
         return 42;
       };
-      Func<Func<int>, int> outerFunc = func =>
+      Func<Func<int>, double> outerFunc = func =>
       {
         trace.Add("start-outer");
         var value = func();
@@ -123,7 +123,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
         return value;
       };
 
-      Func<int> nested = outerFunc.Nest(innerFunc);
+      Func<double> nested = outerFunc.Nest(innerFunc);
 
       var returnValue = nested();
       Assert.That(
@@ -134,7 +134,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
           "inner",
           "end-outer"
         }));
-      Assert.That(returnValue, Is.EqualTo(42));
+      Assert.That(returnValue, Is.EqualTo(42.0));
     }
   }
 }
