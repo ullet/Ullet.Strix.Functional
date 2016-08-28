@@ -50,6 +50,8 @@
     <Compile Include="FnTests\FlipTests.cs" />
     <Compile Include="FnTests\NestTests.cs" />
     <Compile Include="FnTests\PartialTests.cs" />
+    <Compile Include="FnTests\ToActionTests.cs" />
+    <Compile Include="FnTests\ToFuncTests.cs" />
     <Compile Include="FnTests\UncurryTests.cs" />
     <Compile Include="OptionTests.cs" />
     <Compile Include="OptionDictionaryTests.cs" />

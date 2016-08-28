@@ -85,6 +85,14 @@ namespace Ullet.Strix.Functional.Tests.Unit
       Assert.That(testCase.Some, Is.Not.EqualTo(testCase.None));
     }
 
+    [TestCaseSource("EqualitySymmetricalTestCases")]
+    public void EqualityIsSymmetrical(dynamic testCase)
+    {
+      Assert.That(
+        testCase.Left.Equals(testCase.Right),
+        Is.EqualTo(testCase.Right.Equals(testCase.Left)));
+    }
+
     [Test]
     public void IsImplicitlyConvertibleFromTypeOfValue()
     {
@@ -162,6 +170,24 @@ namespace Ullet.Strix.Functional.Tests.Unit
         testCase.Option.ToString(), Is.StringContaining(testCase.Type.Name));
     }
 
+    [Test]
+    public void GetOrElseReturnsValueIfIsSome()
+    {
+      Assert.That(Option.Some(123).GetOrElse(0), Is.EqualTo(123));
+    }
+
+    [Test]
+    public void GetOrElseReturnsFallbackIfIsNone()
+    {
+      Assert.That(Option.None<int>().GetOrElse(0), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetOrElseReturnsEvaluatedFallbackFunctionIfIsNone()
+    {
+      Assert.That(Option.None<int>().GetOrElse(() => 0), Is.EqualTo(0));
+    }
+
     private static IEnumerable<dynamic> OptionTestCases
     {
       get
@@ -178,6 +204,16 @@ namespace Ullet.Strix.Functional.Tests.Unit
         // Assumed types are in same order for zipped enumerables.
         return SomeTestCases.Zip(
           NoneTestCases, (s, n) => new {Some = s.Option, None = n.Option});
+      }
+    }
+
+    private static IEnumerable<dynamic> EqualitySymmetricalTestCases
+    {
+      get
+      {
+        var options = OptionTestCases.Select(x => x.Option).ToArray();
+        return options.SelectMany(
+          x => options.Select(other => new {Left = x, Right = other}));
       }
     }
 

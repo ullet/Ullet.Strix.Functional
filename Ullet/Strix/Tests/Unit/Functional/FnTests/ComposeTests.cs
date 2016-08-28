@@ -25,7 +25,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void ComposeUnaryFunctionWithNonaryFunctionLeftAfterRight()
+    public void ComposeUnaryFunctionWithNullaryFunctionLeftAfterRight()
     {
       Func<int, double> squareRoot = x => Math.Sqrt(x);
       Func<int> nine = () => 9;
@@ -47,7 +47,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void ComposeUnaryFunctionWithNonaryFunctionRightAfterLeft()
+    public void ComposeUnaryFunctionWithNullaryFunctionRightAfterLeft()
     {
       Func<int, double> squareRoot = x => Math.Sqrt(x);
       Func<int> nine = () => 9;
@@ -71,7 +71,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void AfterWithUnaryAndNonaryFunctionsIsAliasForCompose()
+    public void AfterWithUnaryAndNullaryFunctionsIsAliasForCompose()
     {
       Func<int, double> squareRoot = x => Math.Sqrt(x);
       Func<int> nine = () => 9;
@@ -94,7 +94,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.FnTests
     }
 
     [Test]
-    public void BeforeWithUnaryAndNonaryFunctionsIsAliasForComposeReverse()
+    public void BeforeWithUnaryAndNullaryFunctionsIsAliasForComposeReverse()
     {
       Func<int, double> squareRoot = x => Math.Sqrt(x);
       Func<int> nine = () => 9;

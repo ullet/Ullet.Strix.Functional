@@ -25,7 +25,7 @@ namespace Ullet.Strix.Functional
 
     /// <summary>
     /// Compose <paramref name="outer"/> unary function with
-    /// <paramref name="inner"/> nonary function.
+    /// <paramref name="inner"/> nullary function.
     /// </summary>
     /// <remarks>Alias for Compose.</remarks>
     public static Func<TB> After<TA, TB>(
@@ -46,7 +46,7 @@ namespace Ullet.Strix.Functional
 
     /// <summary>
     /// Compose <paramref name="outer"/> unary function with
-    /// <paramref name="inner"/> nonary function.
+    /// <paramref name="inner"/> nullary function.
     /// </summary>
     public static Func<TB> Compose<TA, TB>(
       this Func<TA, TB> outer, Func<TA> inner)
@@ -67,7 +67,7 @@ namespace Ullet.Strix.Functional
 
     /// <summary>
     /// Compose <paramref name="outer"/> unary function with
-    /// <paramref name="inner"/> nonary function.
+    /// <paramref name="inner"/> nullary function.
     /// </summary>
     /// <remarks>Alias for ComposeReverse.</remarks>
     public static Func<TB> Before<TA, TB>(
@@ -88,7 +88,7 @@ namespace Ullet.Strix.Functional
 
     /// <summary>
     /// Compose <paramref name="outer"/> unary function with
-    /// <paramref name="inner"/> nonary function.
+    /// <paramref name="inner"/> nullary function.
     /// </summary>
     public static Func<TB> ComposeReverse<TA, TB>(
       this Func<TA> inner, Func<TA, TB> outer)
