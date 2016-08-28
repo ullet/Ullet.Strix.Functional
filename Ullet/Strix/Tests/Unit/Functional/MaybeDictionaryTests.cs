@@ -7,6 +7,7 @@
 namespace Ullet.Strix.Functional.Tests.Unit
 {
   using System.Collections.Generic;
+  using System.Linq;
   using NUnit.Framework;
 
   [TestFixture]
@@ -18,7 +19,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
       var dictionary =
         new MaybeDictionary<string, string> { { "key", "value" } };
 
-      Assert.That((string)dictionary["key"], Is.EqualTo("value"));
+      Assert.That(dictionary["key"].GetOrElse(""), Is.EqualTo("value"));
     }
 
     [Test]
@@ -34,9 +35,9 @@ namespace Ullet.Strix.Functional.Tests.Unit
       Assert.That(
         new[]
           {
-            (string)dictionary["key1"],
-            (string)dictionary["key2"],
-            (string)dictionary["key3"]
+            dictionary["key1"].GetOrElse(""),
+            dictionary["key2"].GetOrElse(""),
+            dictionary["key3"].GetOrElse("")
           },
         Is.EqualTo(new[] { "value1", "value2", "value3" }));
     }
@@ -64,7 +65,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
         };
 
       Assert.That(dictionary, Has.Count.EqualTo(1));
-      Assert.That((string)dictionary["key"], Is.EqualTo("value"));
+      Assert.That(dictionary["key"].GetOrElse(""), Is.EqualTo("value"));
     }
 
     [Test]
@@ -75,7 +76,6 @@ namespace Ullet.Strix.Functional.Tests.Unit
       var result = dictionary.Add("key", "value");
 
       Assert.That(result, Is.True);
-      Assert.That((string)dictionary["key"], Is.EqualTo("value"));
     }
 
     [Test]
@@ -143,7 +143,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
           {"key2", "value2"},
           {"key3", "value3"}
         }.GetEnumerator();
-      var enumerated = new List<KeyValuePair<string, string>>();
+      var enumerated = new List<KeyValuePair<string, Maybe<string>>>();
 
       while (enumerator.MoveNext())
         enumerated.Add(enumerator.Current);
@@ -152,9 +152,9 @@ namespace Ullet.Strix.Functional.Tests.Unit
         enumerated,
         Is.EquivalentTo(new[]
           {
-            new KeyValuePair<string, string>("key1", "value1"),
-            new KeyValuePair<string, string>("key2", "value2"),
-            new KeyValuePair<string, string>("key3", "value3")
+            new KeyValuePair<string, Maybe<string>>("key1", "value1"),
+            new KeyValuePair<string, Maybe<string>>("key2", "value2"),
+            new KeyValuePair<string, Maybe<string>>("key3", "value3")
           }));
     }
 
@@ -186,7 +186,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
       dictionary.Remove("key2");
 
       Assert.That(
-        dictionary,
+        dictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.GetOrElse("")),
         Is.EquivalentTo(
           new Dictionary<string, string>
             {
@@ -229,7 +229,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
       dictionary.Remove(null);
 
       Assert.That(
-        dictionary,
+        dictionary.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.GetOrElse("")),
         Is.EquivalentTo(
           new Dictionary<string, string>
             {
@@ -246,7 +246,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
 
       dictionary["key"] = "value";
 
-      Assert.That((string)dictionary["key"], Is.EqualTo("value"));
+      Assert.That(dictionary["key"].GetOrElse(""), Is.EqualTo("value"));
     }
 
     [Test]
@@ -259,7 +259,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
 
       dictionary["key"] = "other-value";
 
-      Assert.That((string)dictionary["key"], Is.EqualTo("other-value"));
+      Assert.That(dictionary["key"].GetOrElse(""), Is.EqualTo("other-value"));
     }
 
     [Test]
@@ -273,26 +273,26 @@ namespace Ullet.Strix.Functional.Tests.Unit
     }
 
     [Test]
-    public void IndexerAddsNothingIfValueHasNoValue()
+    public void IndexerAddsMaybeNothing()
     {
       var dictionary = new MaybeDictionary<string, string>();
 
-      dictionary["key"] = Fn.Nothing<string>();
+      dictionary["key"] = Maybe.Nothing<string>();
 
-      Assert.That(dictionary, Is.Empty);
+      Assert.That(dictionary["key"].IsNothing, Is.True);
     }
 
     [Test]
-    public void IndexerDoesNotOverwriteIfValueHasNoValue()
+    public void IndexerOverwritesIfSetToNothing()
     {
       var dictionary = new MaybeDictionary<string, string>
         {
           {"key", "value"}
         };
 
-      dictionary["key"] = Fn.Nothing<string>();
+      dictionary["key"] = Maybe.Nothing<string>();
 
-      Assert.That((string)dictionary["key"], Is.EqualTo("value"));
+      Assert.That(dictionary["key"].IsNothing, Is.True);
     }
 
     [Test]
@@ -307,40 +307,27 @@ namespace Ullet.Strix.Functional.Tests.Unit
 
       Maybe<string> value = dictionary["key2"];
 
-      Assert.That((string)value, Is.EqualTo("value2"));
+      Assert.That(value.GetOrElse(""), Is.EqualTo("value2"));
     }
 
     [Test]
-    public void IndexerReturnsNoValueOfTypeIfKeyNotFound()
+    public void IndexerReturnsNothingIfKeyNotFound()
     {
-      // ReSharper disable once CollectionNeverUpdated.Local
       var dictionary = new MaybeDictionary<string, string>();
 
       Maybe<string> maybe = dictionary["missing-key"];
 
-      Assert.That(maybe.HasValue, Is.False);
+      Assert.That(maybe.IsNothing, Is.True);
     }
 
     [Test]
-    public void IndexerReturnsNoValueOfAnotherTypeIfKeyNotFound()
+    public void IndexerReturnsNothingIfKeyNull()
     {
-      // ReSharper disable once CollectionNeverUpdated.Local
-      var dictionary = new MaybeDictionary<string, int>();
-
-      Maybe<int> maybe = dictionary["missing-key"];
-
-      Assert.That(maybe.HasValue, Is.False);
-    }
-
-    [Test]
-    public void IndexerReturnsNoValueOfTypeIfKeyNull()
-    {
-      // ReSharper disable once CollectionNeverUpdated.Local
       var dictionary = new MaybeDictionary<string, int>();
 
       Maybe<int> maybe = dictionary[null];
 
-      Assert.That(maybe.HasValue, Is.False);
+      Assert.That(maybe.IsNothing, Is.True);
     }
 
     [Test]
@@ -356,7 +343,13 @@ namespace Ullet.Strix.Functional.Tests.Unit
       var values = dictionary.Values;
 
       Assert.That(
-        values, Is.EquivalentTo(new[] {"value1", "value2", "value3"}));
+        values, Is.EquivalentTo(
+        new[]
+        {
+          Maybe.Just("value1"),
+          Maybe.Just("value2"),
+          Maybe.Just("value3")
+        }));
     }
   }
 }

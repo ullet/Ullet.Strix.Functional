@@ -14,22 +14,6 @@ namespace Ullet.Strix.Functional
     private static readonly Unit UnitInstance = new Unit();
 
     /// <summary>
-    /// Create a <see cref="Maybe{T}"/> instance without a value.
-    /// </summary>
-    public static Maybe<T> Nothing<T>()
-    {
-      return new Nothing<T>();
-    }
-
-    /// <summary>
-    /// Create a <see cref="Maybe{T}"/> instance with a specific value.
-    /// </summary>
-    public static Maybe<T> Just<T>(T value)
-    {
-      return new Just<T>(value);
-    }
-
-    /// <summary>
     /// Get the single valued Unit instance.
     /// </summary>
     public static Unit Unit

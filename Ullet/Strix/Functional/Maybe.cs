@@ -9,60 +9,113 @@ namespace Ullet.Strix.Functional
   using System;
 
   /// <summary>
-  /// An optional type, that may or may not have a value.
+  /// Static Maybe methods.
   /// </summary>
-  public abstract class Maybe<T>
+  public static class Maybe
   {
     /// <summary>
-    /// Get the value, or throw exception if no value.
+    /// Create a <see cref="Maybe{T}"/> instance without a value.
     /// </summary>
-    /// <remarks>
-    /// Value can be null for reference and Nullable types.
-    /// </remarks>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if attempt to get value when has no value.
-    /// </exception>
-    public abstract T Value { get; }
-
-    /// <summary>
-    /// Check if there is a value.
-    /// </summary>
-    public abstract bool HasValue { get; }
-
-    /// <summary>
-    /// Explicit conversion from <see cref="Maybe{T}"/> to instance of type
-    /// <typeparamref name="T"/>.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown if <see cref="Maybe{T}"/> instance has no value.
-    /// </exception>
-    public static explicit operator T(Maybe<T> maybe)
+    public static Maybe<T> Nothing<T>()
     {
-      return maybe.Value;
+      return new Maybe<T>();
     }
 
     /// <summary>
-    /// Implicit conversion from instance of <typeparamref name="T"/> to an
-    /// instance of <see cref="Maybe{T}"/>.
+    /// Create a <see cref="Maybe{T}"/> instance with a specific value.
     /// </summary>
-    public static implicit operator Maybe<T>(T value)
+    public static Maybe<T> Just<T>(T value)
     {
-      return new Just<T>(value);
+      return value;
+    }
+
+    /// <summary>
+    /// Return value if Just otherwise fallback value.
+    /// </summary>
+    public static T GetOrElse<T>(this Maybe<T> maybe, T fallback)
+    {
+      return maybe.GetOrElse(() => fallback);
+    }
+
+    /// <summary>
+    /// Return value if Just otherwise value of evaluated fallback function.
+    /// </summary>
+    public static T GetOrElse<T>(this Maybe<T> maybe, Func<T> fallback)
+    {
+      return maybe.Match(just: value => value, nothing: fallback);
+    }
+  }
+
+  /// <summary>
+  /// An optional type, that may or may not have a value.
+  /// </summary>
+  public struct Maybe<T>
+  {
+    /// <summary>
+    /// Construct Maybe instance. Will be "Just" is contained type is a value
+    /// type or given value is not null, otherwise "Nothing".
+    /// </summary>
+    /// <param name="value">Value to initialize with.</param>
+    /// <remarks>
+    /// Maybe is a struct so can never be null. Value is not allowed to be null
+    /// so that never have to worry about null if using Maybe.
+    /// </remarks>
+    public Maybe(T value)
+      : this()
+    {
+      Value = value;
+      IsJust = null != value;
+    }
+
+    internal T Value { get; private set; }
+
+    /// <summary>
+    /// True if there is a value.
+    /// </summary>
+    public bool IsJust { get; private set; }
+
+    /// <summary>
+    /// True if there is no value.
+    /// </summary>
+    public bool IsNothing { get { return !IsJust; } }
+
+    /// <summary>
+    /// Convert Maybe to type <typeparamref name="TReturn"/> by applying
+    /// function <paramref name="just"/> if instance IsJust, otherwise by
+    /// applying function <paramref name="nothing"/>.
+    /// </summary>
+    /// <typeparam name="TReturn">Type to convert to.</typeparam>
+    /// <param name="just">Convertion function when value to convert.</param>
+    /// <param name="nothing">Fallback function.</param>
+    /// <returns>An instance of <typeparamref name="TReturn"/>.</returns>
+    public TReturn Match<TReturn>(Func<T, TReturn> just, Func<TReturn> nothing)
+    {
+      return IsJust ? just(Value) : nothing();
     }
 
     /// <summary>
     /// Determines whether the specified <see cref="T:System.Object"/> is equal
-    /// to the current <see cref="T:System.Object"/>.
+    /// to the current <see cref="T:Maybe"/>.
     /// </summary>
     public override bool Equals(object obj)
     {
-      if (ReferenceEquals(this, obj))
-        return true;
-      var maybe = obj as Maybe<T>;
-      if (maybe == null)
-        return false;
-      return (HasValue && maybe.HasValue && Equals(Value, maybe.Value)) ||
-             (!HasValue && !maybe.HasValue);
+      return obj is Maybe<T> && Equals((Maybe<T>)obj);
+    }
+
+    /// <summary>
+    /// Determines whether the specified <see cref="T:Maybe"/> is equal to the
+    /// current <see cref="T:Maybe"/>.
+    /// </summary>
+    public bool Equals(Maybe<T> other)
+    {
+      return Match(
+        just: value => other.Match(
+          just: otherValue => Equals(value, otherValue),
+          nothing: () => false),
+        nothing: () => other.Match(
+          just: _ => false,
+          nothing: () => true)
+        );
     }
 
     /// <summary>
@@ -70,11 +123,9 @@ namespace Ullet.Strix.Functional
     /// </summary>
     public override int GetHashCode()
     {
-      return HasValue
-        ? (Equals(Value, null)
-          ? 0
-          : typeof (T).GetHashCode() ^ Value.GetHashCode())
-        : -typeof (T).GetHashCode();
+      return Match(
+        just: value => (value.GetHashCode() * 397) ^ typeof(T).GetHashCode(),
+        nothing: () => -typeof(T).GetHashCode());
     }
 
     /// <summary>
@@ -82,9 +133,20 @@ namespace Ullet.Strix.Functional
     /// </summary>
     public override string ToString()
     {
-      return HasValue
-        ? (Equals(Value, null) ? "<null>" : Value.ToString())
-        : string.Format("<nothing<{0}>>", typeof(T).Name);
+      return
+        string.Format("Maybe<{0}> : {1}",
+          typeof(T).Name,
+          Match(just: value => value.ToString(), nothing: () => "<nothing>"));
+    }
+
+    /// <summary>
+    /// Implicit conversion from instance of <typeparamref name="T"/> to an
+    /// instance of <see cref="Maybe{T}"/>. For nullable types, null will result
+    /// in Nothing, all other values are Just.
+    /// </summary>
+    public static implicit operator Maybe<T>(T value)
+    {
+      return new Maybe<T>(value);
     }
   }
 }

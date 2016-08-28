@@ -48,14 +48,11 @@
     <Compile Include="FnTests\ComposeTests.cs" />
     <Compile Include="FnTests\CurryTests.cs" />
     <Compile Include="FnTests\FlipTests.cs" />
-    <Compile Include="FnTests\JustTests.cs" />
     <Compile Include="FnTests\NestTests.cs" />
-    <Compile Include="FnTests\NothingTests.cs" />
     <Compile Include="FnTests\PartialTests.cs" />
     <Compile Include="FnTests\UncurryTests.cs" />
-    <Compile Include="JustTests.cs" />
+    <Compile Include="MaybeTests.cs" />
     <Compile Include="MaybeDictionaryTests.cs" />
-    <Compile Include="NothingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\Ullet.Strix.Functional.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,10 +50,8 @@
     <Compile Include="Fn_Partial.cs" />
     <Compile Include="Fn_ToAction.cs" />
     <Compile Include="Fn_ToFunc.cs" />
-    <Compile Include="Just.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="MaybeDictionary.cs" />
-    <Compile Include="Nothing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

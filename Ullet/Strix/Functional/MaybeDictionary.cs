@@ -22,16 +22,16 @@ namespace Ullet.Strix.Functional
   /// null keys, but this class intentionally breaks that convention.
   /// </remarks>
   public class MaybeDictionary<TKey, TValue>
-    : IEnumerable<KeyValuePair<TKey, TValue>>
+    : IEnumerable<KeyValuePair<TKey, Maybe<TValue>>>
   {
-    private readonly IDictionary<TKey, TValue> _innerDictionary;
+    private readonly IDictionary<TKey, Maybe<TValue>> _innerDictionary;
 
     /// <summary>
     /// Create a new empty dictionary.
     /// </summary>
     public MaybeDictionary()
     {
-      _innerDictionary = new Dictionary<TKey, TValue>();
+      _innerDictionary = new Dictionary<TKey, Maybe<TValue>>();
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ namespace Ullet.Strix.Functional
     /// </param>
     public bool Add(TKey key, TValue value)
     {
-      if (Equals(null, key) || ContainsKey(key))
+      if (Equals(key, null) || ContainsKey(key))
         return false;
       _innerDictionary.Add(key, value);
       return true;
@@ -90,7 +90,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// An enumerator that can be used to iterate through the collection.
     /// </returns>
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    public IEnumerator<KeyValuePair<TKey, Maybe<TValue>>> GetEnumerator()
     {
       return _innerDictionary.GetEnumerator();
     }
@@ -145,13 +145,13 @@ namespace Ullet.Strix.Functional
       get
       {
         return ContainsKey(key)
-          ? Fn.Just(_innerDictionary[key])
-          : Fn.Nothing<TValue>();
+          ? _innerDictionary[key]
+          : Maybe.Nothing<TValue>();
       }
       set
       {
-        if (!Equals(null, key) && value.HasValue)
-          _innerDictionary[key] = value.Value;
+        if (!Equals(null, key))
+          _innerDictionary[key] = value;
       }
     }
 
@@ -161,7 +161,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// A collection containing the values in the dictionary.
     /// </returns>
-    public ICollection<TValue> Values
+    public ICollection<Maybe<TValue>> Values
     {
       get { return _innerDictionary.Values; }
     }

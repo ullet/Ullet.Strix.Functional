@@ -230,7 +230,7 @@ namespace Ullet.Strix.Functional
       where TEx : Exception
     {
       return Handler<TEx, TReturn>(
-        ex => Fn.Just(handleException(ex)), finallyBlock);
+        ex => Maybe.Just(handleException(ex)), finallyBlock);
     }
 
     /// <summary>
@@ -278,10 +278,10 @@ namespace Ullet.Strix.Functional
         catch (Exception ex)
         {
           var tex = ex as TEx;
-          Maybe<TReturn> returned = Fn.Nothing<TReturn>();
+          Maybe<TReturn> returned = Maybe.Nothing<TReturn>();
           if (tex != null)
             returned = handleException(tex);
-          if (returned.HasValue)
+          if (returned.IsJust)
             return returned.Value;
           throw;
         }
