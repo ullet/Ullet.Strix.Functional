@@ -69,9 +69,7 @@ namespace Ullet.Strix.Functional
     /// </returns>
     /// <param name="key">The key to locate in the dictionary.</param>
     public bool ContainsKey(TKey key)
-    {
-      return !Equals(key, null) && _innerDictionary.ContainsKey(key);
-    }
+      => !Equals(key, null) && _innerDictionary.ContainsKey(key);
 
     /// <summary>
     /// Gets the number of elements contained in the dictionary.
@@ -79,10 +77,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// The number of elements contained in the dictionary.
     /// </returns>
-    public int Count
-    {
-      get { return _innerDictionary.Count; }
-    }
+    public int Count => _innerDictionary.Count;
 
     /// <summary>
     /// Returns an enumerator that iterates through the collection.
@@ -91,14 +86,9 @@ namespace Ullet.Strix.Functional
     /// An enumerator that can be used to iterate through the collection.
     /// </returns>
     public IEnumerator<KeyValuePair<TKey, Option<TValue>>> GetEnumerator()
-    {
-      return _innerDictionary.GetEnumerator();
-    }
+      => _innerDictionary.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-      return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     /// <summary>
     /// Gets a collection containing the keys of the dictionary.
@@ -106,10 +96,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// A collection containing the keys of the dictionary.
     /// </returns>
-    public ICollection<TKey> Keys
-    {
-      get { return _innerDictionary.Keys; }
-    }
+    public ICollection<TKey> Keys => _innerDictionary.Keys;
 
     /// <summary>
     /// Removes the element with the specified key from the dictionary.
@@ -121,9 +108,7 @@ namespace Ullet.Strix.Functional
     /// </returns>
     /// <param name="key">The key of the element to remove.</param>
     public bool Remove(TKey key)
-    {
-      return !Equals(null, key) && _innerDictionary.Remove(key);
-    }
+      => !Equals(null, key) && _innerDictionary.Remove(key);
 
     /// <summary>
     /// Gets or sets the element with the specified key.
@@ -161,9 +146,6 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// A collection containing the values in the dictionary.
     /// </returns>
-    public ICollection<Option<TValue>> Values
-    {
-      get { return _innerDictionary.Values; }
-    }
+    public ICollection<Option<TValue>> Values => _innerDictionary.Values;
   }
 }

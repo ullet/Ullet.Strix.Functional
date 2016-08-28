@@ -11,18 +11,10 @@ namespace Ullet.Strix.Functional
   /// </summary>
   public static partial class Fn
   {
-    private static readonly Unit UnitInstance = new Unit();
-
     /// <summary>
     /// Get the single valued Unit instance.
     /// </summary>
-    public static Unit Unit
-    {
-      get
-      {
-        return UnitInstance;
-      }
-    }
+    public static Unit Unit { get; } = new Unit();
   }
 
   /// <summary>

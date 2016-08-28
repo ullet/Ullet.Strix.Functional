@@ -96,9 +96,7 @@ namespace Ullet.Strix.Functional
     public static Func<Func<Unit>, Unit> Handler<TEx>(
       Action<TEx> handleException, Action finallyBlock = null)
       where TEx : Exception
-    {
-      return Handler(handleException.ToFunc(), finallyBlock);
-    }
+      => Handler(handleException.ToFunc(), finallyBlock);
 
     /// <summary>
     /// Construct an exception handler delegate handling exceptions of type
@@ -167,16 +165,14 @@ namespace Ullet.Strix.Functional
     ///  */
     /// ]]>
     /// </example>
+    /*
+     * Easier and clearer to define this "long hand" rather than trying to
+     * delegate to Handler<TEx, TReturn>.
+     */
     public static Func<Func<Unit>, Unit> Handler<TEx>(
       Func<TEx, bool> handleException, Action finallyBlock = null)
       where TEx : Exception
-    {
-      /*
-       * Easier and clearer to define this "long hand" rather than trying to
-       * delegate to Handler<TEx, TReturn>.
-       */
-
-      return f =>
+      => f =>
       {
         try
         {
@@ -191,11 +187,9 @@ namespace Ullet.Strix.Functional
         }
         finally
         {
-          if (finallyBlock != null)
-            finallyBlock();
+          finallyBlock?.Invoke();
         }
       };
-    }
 
     /// <summary>
     /// Construct an exception handler delegate handling exceptions of type
@@ -228,10 +222,8 @@ namespace Ullet.Strix.Functional
     public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
       Func<TEx, TReturn> handleException, Action finallyBlock = null)
       where TEx : Exception
-    {
-      return Handler<TEx, TReturn>(
+      => Handler<TEx, TReturn>(
         ex => Option.Some(handleException(ex)), finallyBlock);
-    }
 
     /// <summary>
     /// Construct an exception handler delegate handling exceptions of type
@@ -268,8 +260,7 @@ namespace Ullet.Strix.Functional
     public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
       Func<TEx, Option<TReturn>> handleException, Action finallyBlock = null)
       where TEx : Exception
-    {
-      return fn =>
+      => fn =>
       {
         try
         {
@@ -278,7 +269,7 @@ namespace Ullet.Strix.Functional
         catch (Exception ex)
         {
           var tex = ex as TEx;
-          Option<TReturn> returned = Option.None<TReturn>();
+          var returned = Option.None<TReturn>();
           if (tex != null)
             returned = handleException(tex);
           if (returned.IsSome)
@@ -287,10 +278,8 @@ namespace Ullet.Strix.Functional
         }
         finally
         {
-          if (finallyBlock != null)
-            finallyBlock();
+          finallyBlock?.Invoke();
         }
       };
-    }
   }
 }

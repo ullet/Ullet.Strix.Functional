@@ -85,9 +85,7 @@ namespace Ullet.Strix.Functional
     /// <returns>A <![CDATA[Func<Func<T>, T>]]> delegate.</returns>
     public static Func<Func<TA>, TC> Nest<TA, TB, TC>(
       this Func<Func<TB>, TC> outerFunc, Func<Func<TA>, TB> innerFunc)
-    {
-      return fn => outerFunc(() => innerFunc(fn));
-    }
+      => fn => outerFunc(() => innerFunc(fn));
 
     /// <summary>
     /// Nest one Func within another.
@@ -103,8 +101,6 @@ namespace Ullet.Strix.Functional
     /// <returns>A <see cref="Func{T}"/> delegate.</returns>
     public static Func<TB> Nest<TA, TB>(
       this Func<Func<TA>, TB> outerFunc, Func<TA> innerFunc)
-    {
-      return () => outerFunc(innerFunc);
-    }
+      => () => outerFunc(innerFunc);
   }
 }

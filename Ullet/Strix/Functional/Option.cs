@@ -16,34 +16,24 @@ namespace Ullet.Strix.Functional
     /// <summary>
     /// Create a <see cref="Option"/> instance without a value.
     /// </summary>
-    public static Option<T> None<T>()
-    {
-      return new Option<T>();
-    }
+    public static Option<T> None<T>() => new Option<T>();
 
     /// <summary>
     /// Create a <see cref="Option"/> instance with a specific value.
     /// </summary>
-    public static Option<T> Some<T>(T value)
-    {
-      return value;
-    }
+    public static Option<T> Some<T>(T value) => value;
 
     /// <summary>
     /// Return value if Some otherwise fallback value.
     /// </summary>
     public static T GetOrElse<T>(this Option<T> option, T fallback)
-    {
-      return option.GetOrElse(() => fallback);
-    }
+      => option.GetOrElse(() => fallback);
 
     /// <summary>
     /// Return value if Some otherwise value of evaluated fallback function.
     /// </summary>
     public static T GetOrElse<T>(this Option<T> option, Func<T> fallback)
-    {
-      return option.Match(some: value => value, none: fallback);
-    }
+      => option.Match(some: value => value, none: fallback);
   }
 
   /// <summary>
@@ -67,17 +57,17 @@ namespace Ullet.Strix.Functional
       IsSome = null != value;
     }
 
-    internal T Value { get; private set; }
+    internal T Value { get; }
 
     /// <summary>
     /// True if there is a value.
     /// </summary>
-    public bool IsSome { get; private set; }
+    public bool IsSome { get; }
 
     /// <summary>
     /// True if there is no value.
     /// </summary>
-    public bool IsNone { get { return !IsSome; } }
+    public bool IsNone => !IsSome;
 
     /// <summary>
     /// Convert Option to type <typeparamref name="TReturn"/> by applying
@@ -89,26 +79,21 @@ namespace Ullet.Strix.Functional
     /// <param name="none">Fallback function.</param>
     /// <returns>An instance of <typeparamref name="TReturn"/>.</returns>
     public TReturn Match<TReturn>(Func<T, TReturn> some, Func<TReturn> none)
-    {
-      return IsSome ? some(Value) : none();
-    }
+      => IsSome ? some(Value) : none();
 
     /// <summary>
     /// Determines whether the specified <see cref="T:System.Object"/> is equal
     /// to the current <see cref="T:Option"/>.
     /// </summary>
     public override bool Equals(object obj)
-    {
-      return obj is Option<T> && Equals((Option<T>)obj);
-    }
+      => obj is Option<T> && Equals((Option<T>)obj);
 
     /// <summary>
     /// Determines whether the specified <see cref="T:Option"/> is equal to the
     /// current <see cref="T:Option"/>.
     /// </summary>
     public bool Equals(Option<T> other)
-    {
-      return Match(
+      => Match(
         some: value => other.Match(
           some: otherValue => Equals(value, otherValue),
           none: () => false),
@@ -116,37 +101,27 @@ namespace Ullet.Strix.Functional
           some: _ => false,
           none: () => true)
         );
-    }
 
     /// <summary>
     /// Serves as a hash function for the type.
     /// </summary>
     public override int GetHashCode()
-    {
-      return Match(
-        some: value => (value.GetHashCode() * 397) ^ typeof(T).GetHashCode(),
-        none: () => -typeof(T).GetHashCode());
-    }
+      => Match(
+        some: value => (value.GetHashCode()*397) ^ typeof (T).GetHashCode(),
+        none: () => -typeof (T).GetHashCode());
 
     /// <summary>
     /// Returns a string that represents the current object.
     /// </summary>
     public override string ToString()
-    {
-      return
-        string.Format("Option<{0}> : {1}",
-          typeof(T).Name,
-          Match(some: value => value.ToString(), none: () => "<none>"));
-    }
+      => $"Option<{typeof (T).Name}> : " +
+         $"{Match(some: value => value.ToString(), none: () => "<none>")}";
 
     /// <summary>
     /// Implicit conversion from instance of <typeparamref name="T"/> to an
     /// instance of <see cref="Option"/>. For nullable types, null will result
     /// in None, all other values are Some.
     /// </summary>
-    public static implicit operator Option<T>(T value)
-    {
-      return new Option<T>(value);
-    }
+    public static implicit operator Option<T>(T value) => new Option<T>(value);
   }
 }
