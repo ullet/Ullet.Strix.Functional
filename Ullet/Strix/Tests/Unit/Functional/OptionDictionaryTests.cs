@@ -11,13 +11,13 @@ namespace Ullet.Strix.Functional.Tests.Unit
   using NUnit.Framework;
 
   [TestFixture]
-  public class MaybeDictionaryTests
+  public class OptionDictionaryTests
   {
     [Test]
     public void CanAddKeyAndValueToDictionary()
     {
       var dictionary =
-        new MaybeDictionary<string, string> { { "key", "value" } };
+        new OptionDictionary<string, string> { { "key", "value" } };
 
       Assert.That(dictionary["key"].GetOrElse(""), Is.EqualTo("value"));
     }
@@ -25,7 +25,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanAddMultipleKeysAndValuesToDictionary()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -45,7 +45,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void AddReturnsFalseIfKeyAlreadyAdded()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
@@ -58,7 +58,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void DoesNotAddElementIfKeyAlreadyAdded()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"},
           {"key", "other-value"}
@@ -71,7 +71,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void AddReturnsTrueIfSuccessfullyAdded()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
       var result = dictionary.Add("key", "value");
 
@@ -81,7 +81,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanClearAllElements()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
@@ -94,7 +94,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanTestContainsKeyWhenKeyExists()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
@@ -105,7 +105,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanTestContainsKeyWhenKeyDoesNotExist()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
@@ -116,7 +116,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void NeverContainsNullKey()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
       Assert.That(dictionary.ContainsKey(null), Is.False);
     }
@@ -124,7 +124,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanCountNumberOfElements()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -137,13 +137,13 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void HasEnumeratorOfKeyValuePairs()
     {
-      var enumerator = new MaybeDictionary<string, string>
+      var enumerator = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
           {"key3", "value3"}
         }.GetEnumerator();
-      var enumerated = new List<KeyValuePair<string, Maybe<string>>>();
+      var enumerated = new List<KeyValuePair<string, Option<string>>>();
 
       while (enumerator.MoveNext())
         enumerated.Add(enumerator.Current);
@@ -152,16 +152,16 @@ namespace Ullet.Strix.Functional.Tests.Unit
         enumerated,
         Is.EquivalentTo(new[]
           {
-            new KeyValuePair<string, Maybe<string>>("key1", "value1"),
-            new KeyValuePair<string, Maybe<string>>("key2", "value2"),
-            new KeyValuePair<string, Maybe<string>>("key3", "value3")
+            new KeyValuePair<string, Option<string>>("key1", "value1"),
+            new KeyValuePair<string, Option<string>>("key2", "value2"),
+            new KeyValuePair<string, Option<string>>("key3", "value3")
           }));
     }
 
     [Test]
     public void CanGetCollectionOfKeys()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -176,7 +176,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void CanRemoveElementByItsKey()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -198,7 +198,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void RemoveReturnsTrueIfElementisRemoved()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -211,7 +211,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void RemoveReturnsFalseIfKeyNotFound()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
       Assert.That(dictionary.Remove("key"), Is.False);
     }
@@ -219,7 +219,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void NothingRemovedIfKeyIsNull()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -242,7 +242,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void IndexerAddsNewElementForNewKey()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
       dictionary["key"] = "value";
 
@@ -252,7 +252,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void IndexerOverwritesValueForExistingKey()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
@@ -265,7 +265,7 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void IndexerAddsNothingIfKeyIsNull()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
       dictionary[null] = "value";
 
@@ -273,67 +273,67 @@ namespace Ullet.Strix.Functional.Tests.Unit
     }
 
     [Test]
-    public void IndexerAddsMaybeNothing()
+    public void IndexerAddsOptionNone()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
-      dictionary["key"] = Maybe.Nothing<string>();
+      dictionary["key"] = Option.None<string>();
 
-      Assert.That(dictionary["key"].IsNothing, Is.True);
+      Assert.That(dictionary["key"].IsNone, Is.True);
     }
 
     [Test]
-    public void IndexerOverwritesIfSetToNothing()
+    public void IndexerOverwritesIfSetToNone()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key", "value"}
         };
 
-      dictionary["key"] = Maybe.Nothing<string>();
+      dictionary["key"] = Option.None<string>();
 
-      Assert.That(dictionary["key"].IsNothing, Is.True);
+      Assert.That(dictionary["key"].IsNone, Is.True);
     }
 
     [Test]
     public void CanGetValueOfElementByItsKey()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
           {"key3", "value3"}
         };
 
-      Maybe<string> value = dictionary["key2"];
+      Option<string> value = dictionary["key2"];
 
       Assert.That(value.GetOrElse(""), Is.EqualTo("value2"));
     }
 
     [Test]
-    public void IndexerReturnsNothingIfKeyNotFound()
+    public void IndexerReturnsNoneIfKeyNotFound()
     {
-      var dictionary = new MaybeDictionary<string, string>();
+      var dictionary = new OptionDictionary<string, string>();
 
-      Maybe<string> maybe = dictionary["missing-key"];
+      Option<string> option = dictionary["missing-key"];
 
-      Assert.That(maybe.IsNothing, Is.True);
+      Assert.That(option.IsNone, Is.True);
     }
 
     [Test]
-    public void IndexerReturnsNothingIfKeyNull()
+    public void IndexerReturnsNoneIfKeyNull()
     {
-      var dictionary = new MaybeDictionary<string, int>();
+      var dictionary = new OptionDictionary<string, int>();
 
-      Maybe<int> maybe = dictionary[null];
+      Option<int> option = dictionary[null];
 
-      Assert.That(maybe.IsNothing, Is.True);
+      Assert.That(option.IsNone, Is.True);
     }
 
     [Test]
     public void CanGetCollectionOfValues()
     {
-      var dictionary = new MaybeDictionary<string, string>
+      var dictionary = new OptionDictionary<string, string>
         {
           {"key1", "value1"},
           {"key2", "value2"},
@@ -346,9 +346,9 @@ namespace Ullet.Strix.Functional.Tests.Unit
         values, Is.EquivalentTo(
         new[]
         {
-          Maybe.Just("value1"),
-          Maybe.Just("value2"),
-          Maybe.Just("value3")
+          Option.Some("value1"),
+          Option.Some("value2"),
+          Option.Some("value3")
         }));
     }
   }

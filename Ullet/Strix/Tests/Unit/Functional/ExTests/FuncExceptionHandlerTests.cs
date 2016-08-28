@@ -41,7 +41,8 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
             handledBy = "ArgumentException";
             return new object();
           });
-      Func<Func<object>, object> outerHandler = Ex.Handler<InvalidOperationException, object>(
+      Func<Func<object>, object> outerHandler =
+        Ex.Handler<InvalidOperationException, object>(
         ex =>
         {
           handledBy = "InvalidOperationException";
@@ -82,7 +83,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void CanConstructFuncHandlerFromConditionalHandlingDelegate()
     {
       Func<Func<object>, object> handler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -91,7 +92,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void FuncHandlerThrowsExceptionIfDelegateFunctionReturnsNothing()
     {
       Func<Func<object>, object> handler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       Assert.Throws<ArgumentException>(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -100,7 +101,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void FuncHandlerNotThrowExceptionIfDelegateFuncReturnsSomething()
     {
       Func<Func<object>, object> handler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Just(new object()));
+        Ex.Handler<ArgumentException, object>(ex => Option.Some(new object()));
       Assert.DoesNotThrow(
         () => handler(() => { throw new ArgumentException(); }));
     }
@@ -126,13 +127,13 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
       var handled = false;
 
       Func<Func<object>, object> innerHandler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       Func<Func<object>, object> outerHandler =
         Ex.Handler<InvalidOperationException, object>(
         ex =>
         {
           handled = true;
-          return Maybe.Just(new object());
+          return Option.Some(new object());
         });
       Func<Func<object>, object> nestedHandler =
         innerHandler.Nest(outerHandler);
@@ -148,7 +149,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
 
       Func<Func<object>, object> innerHandler =
         Ex.Handler<ArgumentNullException, object>(
-          ex => Maybe.Nothing<object>());
+          ex => Option.None<object>());
       Func<Func<object>, object> middleHandler
         = Ex.Handler<ArgumentException, object>(ex => new object());
       Func<Func<object>, object> outerHandler =
@@ -156,7 +157,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
           ex =>
           {
             handled = true;
-            return Maybe.Just(new object());
+            return Option.Some(new object());
           });
       Func<Func<object>, object> nestedHandler =
         outerHandler.Nest(middleHandler.Nest(innerHandler));
@@ -174,21 +175,21 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         ex =>
         {
           callCount++;
-          return Maybe.Nothing<object>();
+          return Option.None<object>();
         });
       Func<Func<object>, object> middleHandler =
         Ex.Handler<Exception, object>(
         ex =>
         {
           callCount++;
-          return Maybe.Nothing<object>();
+          return Option.None<object>();
         });
       Func<Func<object>, object> outerHandler =
         Ex.Handler<Exception, object>(
         ex =>
         {
           callCount++;
-          return Maybe.Just(new object());
+          return Option.Some(new object());
         });
       var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
@@ -206,21 +207,21 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
         ex =>
         {
           orderCalled.Add("inner");
-          return Maybe.Nothing<object>();
+          return Option.None<object>();
         });
       Func<Func<object>, object> middleHandler =
         Ex.Handler<Exception, object>(
           ex =>
           {
             orderCalled.Add("middle");
-            return Maybe.Nothing<object>();
+            return Option.None<object>();
           });
       Func<Func<object>, object> outerHandler =
         Ex.Handler<Exception, object>(
         ex =>
         {
           orderCalled.Add("outer");
-          return Maybe.Just(new object());
+          return Option.Some(new object());
         });
       var nestedHandler = outerHandler.Nest(middleHandler.Nest(innerHandler));
 
@@ -251,7 +252,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ExceptionReThrownByFuncHandlerRetainsStackTrace()
     {
       var handler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
         {
@@ -288,9 +289,9 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ExceptionReThrownByNestedActionHandlerRetainsStackTrace()
     {
       var innerHandler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       var outerHandler =
-        Ex.Handler<ArgumentException, object>(ex => Maybe.Nothing<object>());
+        Ex.Handler<ArgumentException, object>(ex => Option.None<object>());
       var handler = innerHandler.Nest(outerHandler);
       var argEx = Assert.Throws<ArgumentException>(() =>
         handler(() =>
@@ -317,7 +318,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ReturnValuePassedThroughWhenNoExceptionForConditionalDelegate()
     {
-      var handler = Ex.Handler<Exception, int>(ex => Maybe.Nothing<int>());
+      var handler = Ex.Handler<Exception, int>(ex => Option.None<int>());
 
       var returned = handler(() => 42);
 
@@ -337,7 +338,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ValueReturnedFromHandlerWhenHandledForConditionalDelegate()
     {
-      var handler = Ex.Handler<Exception, int>(ex => Maybe.Just(42));
+      var handler = Ex.Handler<Exception, int>(ex => Option.Some(42));
 
       var returned = handler(() => {throw new Exception();});
 
@@ -362,13 +363,13 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ValueReturnedFromFirstHandlerThatCanHandleExceptionConditional()
     {
       var handler =
-        Ex.Handler<Exception, int>(ex => Maybe.Just(4))
-          .Nest(Ex.Handler<ArgumentException, int>(ex => Maybe.Just(3))
-            .Nest(Ex.Handler<ArgumentException, int>(ex => Maybe.Just(2))
-              .Nest(Ex.Handler<ArgumentException, int>(ex => Maybe.Nothing<int>())
+        Ex.Handler<Exception, int>(ex => Option.Some(4))
+          .Nest(Ex.Handler<ArgumentException, int>(ex => Option.Some(3))
+            .Nest(Ex.Handler<ArgumentException, int>(ex => Option.Some(2))
+              .Nest(Ex.Handler<ArgumentException, int>(ex => Option.None<int>())
                 .Nest(
                   Ex.Handler<InvalidOperationException, int>(
-                    ex => Maybe.Just(1))))));
+                    ex => Option.Some(1))))));
 
       var returned = handler(() => { throw new ArgumentException(); });
 
@@ -402,7 +403,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var finallyWasCalled = false;
       var handler = Ex.Handler<Exception, int>(
-        ex => Maybe.Nothing<int>(), () => finallyWasCalled = true);
+        ex => Option.None<int>(), () => finallyWasCalled = true);
 
       handler(() => 42);
 
@@ -413,7 +414,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     public void ReturnValuePassedThruWhenNoExceptionAndFinallyForConditional()
     {
       var handler = Ex.Handler<Exception, int>(
-        ex => Maybe.Nothing<int>(), () => { });
+        ex => Option.None<int>(), () => { });
 
       var returned = handler(() => 42);
 
@@ -447,7 +448,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var finallyWasCalled = false;
       var handler = Ex.Handler<Exception, int>(
-        ex => Maybe.Just(-1), () => finallyWasCalled = true);
+        ex => Option.Some(-1), () => finallyWasCalled = true);
 
       handler(() => { throw new Exception(); });
 
@@ -457,7 +458,8 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     [Test]
     public void ReturnValueFromHandlerWithFinallyBlockForConditionalDelegate()
     {
-      var handler = Ex.Handler<Exception, int>(ex => Maybe.Just(-1), () => { });
+      var handler =
+        Ex.Handler<Exception, int>(ex => Option.Some(-1), () => { });
 
       var returned = handler(() => { throw new Exception(); });
 
@@ -481,7 +483,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var finallyWasCalled = false;
       var handler = Ex.Handler<ArgumentException, int>(
-        ex => Maybe.Just(-1), () => finallyWasCalled = true);
+        ex => Option.Some(-1), () => finallyWasCalled = true);
 
       Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
 
@@ -493,7 +495,7 @@ namespace Ullet.Strix.Functional.Tests.Unit.ExTests
     {
       var finallyWasCalled = false;
       var handler = Ex.Handler<Exception, int>(
-        ex => Maybe.Nothing<int>(), () => finallyWasCalled = true);
+        ex => Option.None<int>(), () => finallyWasCalled = true);
 
       Assert.Throws<Exception>(() => handler(() => { throw new Exception(); }));
 

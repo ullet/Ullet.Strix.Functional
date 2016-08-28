@@ -10,28 +10,28 @@ namespace Ullet.Strix.Functional
   using System.Collections.Generic;
 
   /// <summary>
-  /// Dictionary of keys and values returning <see cref="T:Maybe{TValue}"/> from
-  /// indexer instead of simply a <typeparamref name="TValue"/>.
+  /// Dictionary of keys and values returning <see cref="T:Option{TValue}"/>
+  /// from indexer instead of simply a <typeparamref name="TValue"/>.
   /// </summary>
   /// <remarks>
   /// Looking up a value for a key not in the dictionary returns
-  /// <see cref="T:Maybe{TValue}"/> with no value rather than throw an
+  /// <see cref="T:Option{TValue}"/> with no value rather than throw an
   /// exception.
   /// Does NOT implement interface <see cref="T:IDictionary{TKey, TValue}"/>.
   /// The dictionary interface expects exceptions to be thrown for missing and
   /// null keys, but this class intentionally breaks that convention.
   /// </remarks>
-  public class MaybeDictionary<TKey, TValue>
-    : IEnumerable<KeyValuePair<TKey, Maybe<TValue>>>
+  public class OptionDictionary<TKey, TValue>
+    : IEnumerable<KeyValuePair<TKey, Option<TValue>>>
   {
-    private readonly IDictionary<TKey, Maybe<TValue>> _innerDictionary;
+    private readonly IDictionary<TKey, Option<TValue>> _innerDictionary;
 
     /// <summary>
     /// Create a new empty dictionary.
     /// </summary>
-    public MaybeDictionary()
+    public OptionDictionary()
     {
-      _innerDictionary = new Dictionary<TKey, Maybe<TValue>>();
+      _innerDictionary = new Dictionary<TKey, Option<TValue>>();
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// An enumerator that can be used to iterate through the collection.
     /// </returns>
-    public IEnumerator<KeyValuePair<TKey, Maybe<TValue>>> GetEnumerator()
+    public IEnumerator<KeyValuePair<TKey, Option<TValue>>> GetEnumerator()
     {
       return _innerDictionary.GetEnumerator();
     }
@@ -129,24 +129,24 @@ namespace Ullet.Strix.Functional
     /// Gets or sets the element with the specified key.
     /// </summary>
     /// <returns>
-    /// A <see cref="T:Maybe{TValue}"/>.  Will contain the value of the element
+    /// A <see cref="T:Option{TValue}"/>.  Will contain the value of the element
     /// with the specified key if the key is found, otherwise no value.
     /// </returns>
     /// <param name="key">The key of the element to get or set.</param>
     /// <remarks>
-    /// Returns <see cref="T:Maybe{TValue}"/> with no value if key not found or
+    /// Returns <see cref="T:Option{TValue}"/> with no value if key not found or
     /// key is null.
     /// Element will not be set if key is null, an exception will not be thrown.
-    /// Element will not be set if set <see cref="T:Maybe{TValue}"/> has no
+    /// Element will not be set if set <see cref="T:Option{TValue}"/> has no
     /// value, an exception will not be thrown.
     /// </remarks>
-    public Maybe<TValue> this[TKey key]
+    public Option<TValue> this[TKey key]
     {
       get
       {
         return ContainsKey(key)
           ? _innerDictionary[key]
-          : Maybe.Nothing<TValue>();
+          : Option.None<TValue>();
       }
       set
       {
@@ -161,7 +161,7 @@ namespace Ullet.Strix.Functional
     /// <returns>
     /// A collection containing the values in the dictionary.
     /// </returns>
-    public ICollection<Maybe<TValue>> Values
+    public ICollection<Option<TValue>> Values
     {
       get { return _innerDictionary.Values; }
     }

@@ -230,7 +230,7 @@ namespace Ullet.Strix.Functional
       where TEx : Exception
     {
       return Handler<TEx, TReturn>(
-        ex => Maybe.Just(handleException(ex)), finallyBlock);
+        ex => Option.Some(handleException(ex)), finallyBlock);
     }
 
     /// <summary>
@@ -249,7 +249,7 @@ namespace Ullet.Strix.Functional
     /// Function delegate to handle exceptions of type
     /// <typeparamref name="TEx"/>.  Optionally return a value, possibly null,
     /// of type <typeparamref name="TReturn"/>.  Delegate must return an
-    /// instance of <see cref="Maybe{TReturn}"/> to indicate if a value has
+    /// instance of <see cref="Option"/> to indicate if a value has
     /// been returned.  If HasValue property of returned instance is false then
     /// the exception will be re-thrown to be caught by another handler or to
     /// bubble up unhandled.
@@ -266,7 +266,7 @@ namespace Ullet.Strix.Functional
     /// Return value may be null for reference and Nullable types.
     /// </remarks>
     public static Func<Func<TReturn>, TReturn> Handler<TEx, TReturn>(
-      Func<TEx, Maybe<TReturn>> handleException, Action finallyBlock = null)
+      Func<TEx, Option<TReturn>> handleException, Action finallyBlock = null)
       where TEx : Exception
     {
       return fn =>
@@ -278,10 +278,10 @@ namespace Ullet.Strix.Functional
         catch (Exception ex)
         {
           var tex = ex as TEx;
-          Maybe<TReturn> returned = Maybe.Nothing<TReturn>();
+          Option<TReturn> returned = Option.None<TReturn>();
           if (tex != null)
             returned = handleException(tex);
-          if (returned.IsJust)
+          if (returned.IsSome)
             return returned.Value;
           throw;
         }

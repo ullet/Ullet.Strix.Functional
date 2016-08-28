@@ -51,8 +51,8 @@
     <Compile Include="FnTests\NestTests.cs" />
     <Compile Include="FnTests\PartialTests.cs" />
     <Compile Include="FnTests\UncurryTests.cs" />
-    <Compile Include="MaybeTests.cs" />
-    <Compile Include="MaybeDictionaryTests.cs" />
+    <Compile Include="OptionTests.cs" />
+    <Compile Include="OptionDictionaryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

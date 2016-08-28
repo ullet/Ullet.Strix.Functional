@@ -50,8 +50,8 @@
     <Compile Include="Fn_Partial.cs" />
     <Compile Include="Fn_ToAction.cs" />
     <Compile Include="Fn_ToFunc.cs" />
-    <Compile Include="Maybe.cs" />
-    <Compile Include="MaybeDictionary.cs" />
+    <Compile Include="Option.cs" />
+    <Compile Include="OptionDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
