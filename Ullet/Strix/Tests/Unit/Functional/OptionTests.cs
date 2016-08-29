@@ -6,6 +6,7 @@
 
 namespace Ullet.Strix.Functional.Tests.Unit
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using NUnit.Framework;
@@ -142,6 +143,135 @@ namespace Ullet.Strix.Functional.Tests.Unit
     [Test]
     public void GetOrElseReturnsEvaluatedFallbackFunctionIfIsNone()
       => Assert.That(Option.None<int>().GetOrElse(() => 0), Is.EqualTo(0));
+
+    [TestFixture(typeof (int), typeof (double))]
+    [TestFixture(typeof (double), typeof (string))]
+    [TestFixture(typeof (long), typeof (long))]
+    [TestFixture(typeof (object), typeof (Array))]
+    public class NoneAlwaysMapsToNone<TInput, TResult>
+    {
+      private static Func<TInput, TResult> MapFunc =>
+        (Func<TInput, TResult>) MapFuncs[
+          Tuple.Create(typeof (TInput), typeof (TResult))];
+
+      [Test]
+      public void Test()
+        => Assert.True(Option.None<TInput>().Map(MapFunc).IsNone);
+    }
+
+    [TestFixture(typeof(int), typeof(string))]
+    [TestFixture(typeof(double), typeof(int?))]
+    [TestFixture(typeof(long), typeof(object))]
+    [TestFixture(typeof(float), typeof(Array))]
+    public class FuncResultOfNullAlwaysMapsToNone<TInput, TResult>
+    {
+      private static Func<TInput, TResult> MapFunc =>
+        (Func<TInput, TResult>)MapToNullFuncs[
+          Tuple.Create(typeof(TInput), typeof(TResult))];
+
+      [Test]
+      public void Test()
+        => Assert.True(Option.Some(default(TInput)).Map(MapFunc).IsNone);
+    }
+
+    [TestFixture(typeof(int), typeof(string))]
+    [TestFixture(typeof(double), typeof(int?))]
+    [TestFixture(typeof(long), typeof(object))]
+    [TestFixture(typeof(float), typeof(Array))]
+    public class NonNullFuncResultAlwaysMapsToSome<TInput, TResult>
+    {
+      private static Func<TInput, TResult> MapFunc =>
+        (Func<TInput, TResult>)MapToNonNullFuncs[
+          Tuple.Create(typeof(TInput), typeof(TResult))];
+
+      [Test]
+      public void Test()
+        => Assert.True(Option.Some(default(TInput)).Map(MapFunc).IsSome);
+    }
+
+    [TestFixture(typeof(int), typeof(string))]
+    [TestFixture(typeof(double), typeof(int?))]
+    [TestFixture(typeof(long), typeof(object))]
+    [TestFixture(typeof(float), typeof(Array))]
+    public class MappedOptionHasSameValueAsResultOfFunc<TInput, TResult>
+    {
+      private static Tuple<Delegate, object, object> TestCase =>
+        MapToSomeTestCases[Tuple.Create(typeof(TInput), typeof(TResult))];
+
+      private static Func<TInput, TResult> MapFunc
+        => (Func<TInput, TResult>)TestCase.Item1;
+
+      private static TInput Input => (TInput)TestCase.Item2;
+
+      private static TResult ExpectedValue => (TResult)TestCase.Item3;
+
+      [Test]
+      public void Test()
+        => Assert.That(
+          Option.Some(Input).Map(MapFunc).GetOrElse(default(TResult)),
+          Is.EqualTo(ExpectedValue));
+    }
+
+    private static readonly Dictionary<Tuple<Type, Type>, Delegate>
+      MapFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
+      {
+        [Tuple.Create(typeof (int), typeof (double))]
+          = (Func<int, double>) (x => x),
+        [Tuple.Create(typeof (double), typeof (string))]
+          = (Func<double, string>) (x => $"{x}"),
+        [Tuple.Create(typeof (long), typeof (long))]
+          = (Func<long, long>) (x => x),
+        [Tuple.Create(typeof (object), typeof (Array))]
+          = (Func<object, Array>) (_ => new object[] {})
+      };
+
+    private static readonly Dictionary<Tuple<Type, Type>, Delegate>
+      MapToNullFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
+      {
+        [Tuple.Create(typeof(int), typeof(string))]
+          = (Func<int, string>)(_ => null),
+        [Tuple.Create(typeof(double), typeof(int?))]
+          = (Func<double, int?>)(_ => null),
+        [Tuple.Create(typeof(long), typeof(object))]
+          = (Func<long, object>)(_ => null),
+        [Tuple.Create(typeof(float), typeof(Array))]
+          = (Func<float, Array>)(_ => null)
+      };
+
+    private static readonly Dictionary<Tuple<Type, Type>, Delegate>
+      MapToNonNullFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
+      {
+        [Tuple.Create(typeof (int), typeof (string))]
+          = (Func<int, string>) (x => $"{x}"),
+        [Tuple.Create(typeof (double), typeof (int?))]
+          = (Func<double, int?>) (x => (int) Math.Floor(x)),
+        [Tuple.Create(typeof (long), typeof (object))]
+          = (Func<long, object>) (x => x),
+        [Tuple.Create(typeof (float), typeof (Array))]
+          = (Func<float, Array>) (x => new[] {x})
+      };
+
+    private static readonly Dictionary<
+      Tuple<Type, Type>, Tuple<Delegate, object, object>> MapToSomeTestCases =
+        new Dictionary<Tuple<Type, Type>, Tuple<Delegate, object, object>>
+        {
+          [Tuple.Create(typeof (int), typeof (string))] = Tuple.Create(
+            (Delegate) (Func<int, string>) (x => $"{x}"), // map func
+            (object) 7,                                   // input value
+            (object) "7"),                                // expected result
+          [Tuple.Create(typeof (double), typeof (int?))] = Tuple.Create(
+            (Delegate) (Func<double, int?>) (x => (int) Math.Floor(x)),
+            (object) 7.3,
+            (object) 7),
+          [Tuple.Create(typeof (long), typeof (object))] = Tuple.Create(
+            (Delegate) (Func<long, object>) (x => x),
+            (object) 3L,
+            (object) 3L),
+          [Tuple.Create(typeof (float), typeof (Array))] = Tuple.Create(
+            (Delegate) (Func<float, Array>) (x => new[] {x}),
+            (object) 1.2f,
+            (object) new[] {1.2f})
+        };
 
     private static IEnumerable<dynamic> OptionTestCases
       => NoneTestCases.Union(SomeTestCases);

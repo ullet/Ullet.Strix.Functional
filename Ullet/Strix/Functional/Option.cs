@@ -34,6 +34,18 @@ namespace Ullet.Strix.Functional
     /// </summary>
     public static T GetOrElse<T>(this Option<T> option, Func<T> fallback)
       => option.Match(some: value => value, none: fallback);
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <param name="option"></param>
+    /// <param name="func"></param>
+    /// <returns></returns>
+    public static Option<TReturn> Map<T, TReturn>(
+      this Option<T> option, Func<T, TReturn> func)
+      => option.Match(some: v => Some(func(v)), none: None<TReturn>);
   }
 
   /// <summary>
