@@ -230,6 +230,44 @@ namespace Ullet.Strix.Functional.Tests.Unit
         => Assert.That(new Option<T>(_value), Is.EqualTo(Option.Of(_value)));
     }
 
+    [TestFixture(typeof(int), typeof(double))]
+    [TestFixture(typeof(double), typeof(string))]
+    [TestFixture(typeof(long), typeof(long))]
+    [TestFixture(typeof(object), typeof(Array))]
+    public class NoneAlwaysBindsToNone<TInput, TResult>
+    {
+      private static Func<TInput, Option<TResult>> BindFunc =>
+        (Func<TInput, Option<TResult>>)BindFuncs[
+          Tuple.Create(typeof(TInput), typeof(TResult))];
+
+      [Test]
+      public void Test()
+        => Assert.True(Option.None<TInput>().Bind(BindFunc).IsNone);
+    }
+
+    [TestFixture(typeof (int), typeof (string))]
+    [TestFixture(typeof (double), typeof (int?))]
+    [TestFixture(typeof (long), typeof (object))]
+    [TestFixture(typeof (float), typeof (decimal))]
+    public class BindReturnsResultsOfFunc<TInput, TResult>
+    {
+      private static Tuple<Delegate, object, object> TestCase =>
+        BindTestCases[Tuple.Create(typeof (TInput), typeof (TResult))];
+
+      private static Func<TInput, Option<TResult>> BindFunc
+        => (Func<TInput, Option<TResult>>) TestCase.Item1;
+
+      private static TInput Input => (TInput) TestCase.Item2;
+
+      private static Option<TResult> ExpectedOption
+        => (Option<TResult>) TestCase.Item3;
+
+      [Test]
+      public void Test()
+        => Assert.That(
+          Option.Some(Input).Bind(BindFunc), Is.EqualTo(ExpectedOption));
+    }
+
     private static readonly Dictionary<Tuple<Type, Type>, Delegate>
       MapFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
       {
@@ -289,6 +327,44 @@ namespace Ullet.Strix.Functional.Tests.Unit
             (Delegate) (Func<float, Array>) (x => new[] {x}),
             (object) 1.2f,
             (object) new[] {1.2f})
+        };
+
+    private static readonly Dictionary<Tuple<Type, Type>, Delegate>
+      BindFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
+      {
+        [Tuple.Create(typeof (int), typeof (double))]
+          = (Func<int, Option<double>>) (x => Option.Of<double>(x)),
+        [Tuple.Create(typeof (double), typeof (string))]
+          = (Func<double, Option<string>>) (x => Option.Of($"{x}")),
+        [Tuple.Create(typeof (long), typeof (long))]
+          = (Func<long, Option<long>>) Option.Of,
+        [Tuple.Create(typeof (object), typeof (Array))]
+          = (Func<object, Option<Array>>) (
+            _ => Option.Of<Array>(new object[] {}))
+      };
+
+    private static readonly Dictionary<
+      Tuple<Type, Type>, Tuple<Delegate, object, object>> BindTestCases =
+        new Dictionary<Tuple<Type, Type>, Tuple<Delegate, object, object>>
+        {
+          [Tuple.Create(typeof(int), typeof(string))] = Tuple.Create(
+            (Delegate) (Func<int, Option<string>>)(x => Option.Of($"{x}")),
+            (object)7,
+            (object)Option.Of("7")),
+          [Tuple.Create(typeof(double), typeof(int?))] = Tuple.Create(
+            (Delegate)(Func<double, Option<int?>>)(
+              x => Option.Of<int?>((int)Math.Floor(x))),
+            (object)7.3,
+            (object)Option.Of<int?>(7)),
+          [Tuple.Create(typeof(long), typeof(object))] = Tuple.Create(
+            (Delegate)(Func<long, Option<object>>)(x => Option.Of<object>(x)),
+            (object)3L,
+            (object)Option.Of<object>(3L)),
+          [Tuple.Create(typeof(float), typeof(decimal))] = Tuple.Create(
+            (Delegate)(Func<float, Option<decimal>>)(
+              x => Option.Of((decimal)x)),
+            (object)1.2f,
+            (object)Option.Of(1.2m))
         };
 
     private static IEnumerable<dynamic> OptionTestCases

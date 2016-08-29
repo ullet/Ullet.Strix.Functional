@@ -42,12 +42,21 @@ namespace Ullet.Strix.Functional
     /// </summary>
     public static Option<TReturn> Map<T, TReturn>(
       this Option<T> option, Func<T, TReturn> func)
-      => option.Match(some: v => Some(func(v)), none: None<TReturn>);
+      => option.Bind(x => Of(func(x)));
 
     /// <summary>
     /// Contain value in Option.
     /// </summary>
     public static Option<T> Of<T>(T value) => value;
+
+    /// <summary>
+    /// Bind Option of one contained type to an Option of another contained type
+    /// using the binding function. None is always mapped to None.
+    /// </summary>
+    public static Option<TReturn> Bind<T, TReturn>(
+      this Option<T> option,
+      Func<T, Option<TReturn>> func)
+      => option.Match(some: func, none: None<TReturn>);
   }
 
   /// <summary>
@@ -109,7 +118,7 @@ namespace Ullet.Strix.Functional
     public bool Equals(Option<T> other)
       => Match(
         some: value => other.Match(
-          some: otherValue => Equals(value, otherValue),
+          some: otherValue => value.Equals(otherValue),
           none: () => false),
         none: () => other.Match(
           some: _ => false,
