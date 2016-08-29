@@ -36,16 +36,18 @@ namespace Ullet.Strix.Functional
       => option.Match(some: value => value, none: fallback);
 
     /// <summary>
-    ///
+    /// Map Option of one contained type to an Option of another contained type
+    /// using the mapping function. None is always mapped to None. If mapping
+    /// function results in null then returns None.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TReturn"></typeparam>
-    /// <param name="option"></param>
-    /// <param name="func"></param>
-    /// <returns></returns>
     public static Option<TReturn> Map<T, TReturn>(
       this Option<T> option, Func<T, TReturn> func)
       => option.Match(some: v => Some(func(v)), none: None<TReturn>);
+
+    /// <summary>
+    /// Contain value in Option.
+    /// </summary>
+    public static Option<T> Of<T>(T value) => value;
   }
 
   /// <summary>

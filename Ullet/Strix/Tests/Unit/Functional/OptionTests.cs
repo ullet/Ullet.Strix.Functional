@@ -212,6 +212,24 @@ namespace Ullet.Strix.Functional.Tests.Unit
           Is.EqualTo(ExpectedValue));
     }
 
+    [TestFixture(typeof (int), 73)]
+    [TestFixture(typeof (string), null)]
+    [TestFixture(typeof(double), 7.3)]
+    [TestFixture(typeof(long?), null)]
+    public class OfIsReturnOperationForOption<T>
+    {
+      private readonly T _value;
+
+      public OfIsReturnOperationForOption(T value)
+      {
+        _value = value;
+      }
+
+      [Test]
+      public void Test()
+        => Assert.That(new Option<T>(_value), Is.EqualTo(Option.Of(_value)));
+    }
+
     private static readonly Dictionary<Tuple<Type, Type>, Delegate>
       MapFuncs = new Dictionary<Tuple<Type, Type>, Delegate>
       {
